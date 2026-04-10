@@ -88,10 +88,10 @@ class VideoPlaybackTest(BaseScenario):
             timeout=8,
         )
 
-        # Step — Back to browse
+        # Step — Back to browse (one back exits player; safe_back cancels exit dialog)
         self.step(
             "Back button returns to browse screen",
-            action_fn=lambda: self._remote.back(2),
+            action_fn=lambda: self._safe_back(1),
             expected_fn=lambda: not self._inspector.is_player_visible(),
             timeout=8,
             screenshot=True,

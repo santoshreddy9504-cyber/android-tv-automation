@@ -80,7 +80,7 @@ class SearchTest(BaseScenario):
         # ── 6. Back to home ───────────────────────────────────────────────
         self.step(
             "Back navigation returns from search",
-            action_fn=lambda: self._remote.back(3),
+            action_fn=lambda: self._go_to_app_root(),
             timeout=8,
         )
 
@@ -91,26 +91,20 @@ class SearchTest(BaseScenario):
     # ── Helpers ───────────────────────────────────────────────────────────
 
     def _go_to_search(self):
-        """Navigate to Search within the ROD TV app (never use global search keycode)."""
-        # ROD TV has a LEFT sidebar — tap the search icon (5th item at y=575)
-        # then navigate DOWN in sidebar until search screen appears
+        """Navigate to Search within the ROD TV app via the left sidebar (y=575)."""
         self._go_to_app_root()
         self._wait(0.5)
         self._remote.left(1, delay=0.5)   # open sidebar
         self._wait(0.4)
         self._ensure_in_app()
-        # Navigate DOWN through sidebar items looking for search
-        for _ in range(7):
-            self._remote.tap(77, 575, delay=0.5)   # tap search icon position
-            self._wait(0.3)
-            self._remote.select()
-            self._wait(1.5)
-            if self._on_search_screen():
-                return
-            if self._inspector.any_text_visible(self.SEARCH_ENTRY_POINTS):
-                return
-            self._remote.left(1, delay=0.3)
-            self._remote.down(1, delay=0.3)
+        # Tap the Search sidebar item (5th icon, y=575) — tap alone selects it
+        self._remote.tap(77, 575, delay=0.5)
+        self._wait(1.5)
+        if self._on_search_screen():
+            return
+        # If not on search yet, try pressing SELECT to confirm
+        self._remote.select()
+        self._wait(1.5)
 
     def _on_search_screen(self) -> bool:
         texts = self._inspector.get_all_text()

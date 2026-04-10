@@ -14,15 +14,15 @@ class SectionNavigationTest(BaseScenario):
     SCENARIO_ID   = "TC002"
     SCENARIO_NAME = "Section Navigation & Content Load"
 
-    # ROD TV left sidebar has ~6 icon items — we test each by index
-    # Sidebar item centres (tap coordinates from UI dump): x=77, y=215,305,395,485,575,665
+    # ROD TV left sidebar — confirmed labels from UI dump (sidebar open screenshot)
+    # x=77 for all items; y positions from uiautomator bounds
     SIDEBAR_ITEMS = [
-        {"y": 215, "label": "Nav Item 1 (Home/top)"},
-        {"y": 305, "label": "Nav Item 2"},
-        {"y": 395, "label": "Nav Item 3"},
-        {"y": 485, "label": "Nav Item 4"},
-        {"y": 575, "label": "Nav Item 5"},
-        {"y": 665, "label": "Nav Item 6 (bottom)"},
+        {"y": 215, "label": "Home",         "indicators": ["Popular Collections", "Continue Watching", "COMING SOON", "New On"]},
+        {"y": 305, "label": "Live Events",  "indicators": ["Live", "Live Events", "Channels", "Channel", "On Air", "LIVE"]},
+        {"y": 395, "label": "Trending",     "indicators": ["Trending", "Popular", "Top", "Featured", "Most Watched"]},
+        {"y": 485, "label": "My List",      "indicators": ["My List", "Watchlist", "Saved", "No items", "Your list", "Watch Later"]},
+        {"y": 575, "label": "Search",       "indicators": ["Search", "search", "Find", "Type to search"]},
+        {"y": 665, "label": "Account Info", "indicators": ["Account", "Profile", "Settings", "Sign", "Email", "Subscription", "Log"]},
     ]
 
     CONTENT_INDICATORS = [
@@ -60,14 +60,12 @@ class SectionNavigationTest(BaseScenario):
         items_passed = 0
 
         for i, item in enumerate(self.SIDEBAR_ITEMS):
-            label = item["label"]
+            label    = item["label"]
+            expected = item["indicators"]
             self._log.info(f"  -- Testing sidebar item {i+1}: {label} --")
 
-            # Tap the sidebar item directly by coordinate
-            self._remote.tap(77, item["y"], delay=0.5)
-            self._wait(0.3)
-            # Press SELECT or RIGHT to open section
-            self._remote.select()
+            # Tap the sidebar item — tap alone selects/opens the section
+            self._remote.tap(77, item["y"], delay=0.6)
             self._wait(2)
 
             # Check we're still in ROD TV
@@ -75,30 +73,33 @@ class SectionNavigationTest(BaseScenario):
                 self._log.warning(f"  App exited on item {i+1} — skipping")
                 break
 
-            # Check content loaded
+            # Check section-specific content loaded
             texts = self._inspector.get_all_text()
-            has_content = bool(self._inspector.any_text_visible(self.CONTENT_INDICATORS))
+            section_match = bool(self._inspector.any_text_visible(expected))
+            generic_content = bool(self._inspector.any_text_visible(self.CONTENT_INDICATORS))
             item_count = self._inspector.get_content_count()
+            passed_step = section_match or (generic_content and item_count > 1)
 
-            self._log.info(f"    Texts: {texts[:4]} | Items: {item_count} | Content: {has_content}")
+            self._log.info(
+                f"    [{label}] section_match={section_match} content={generic_content} "
+                f"items={item_count} texts={texts[:4]}"
+            )
 
             # Screenshot
-            self._take_screenshot(f"nav_item_{i+1}")
+            self._take_screenshot(f"nav_item_{i+1}_{label.replace(' ', '_')}")
 
             self._result.steps.append(StepResult(
-                f"Sidebar item {i+1} — content loads",
-                has_content or item_count > 1,
-                f"{item_count} elements, texts: {texts[:3]}",
+                f"{label} section loads correctly",
+                passed_step,
+                f"section indicators: {section_match}, items: {item_count}, texts: {texts[:3]}",
             ))
 
             items_tested += 1
-            if has_content or item_count > 1:
+            if passed_step:
                 items_passed += 1
 
-            # Go back to sidebar for next item
+            # Return to sidebar for next item — tap the sidebar column
             self._remote.left(1, delay=0.4)
-            self._wait(0.3)
-            self._remote.down(1, delay=0.3)   # next sidebar item
             self._wait(0.3)
 
         # ── 4. Test scroll down on home content ──────────────────────────
