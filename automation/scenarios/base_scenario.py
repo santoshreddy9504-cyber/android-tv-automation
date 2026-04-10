@@ -241,13 +241,27 @@ class BaseScenario:
         return True
 
     def _go_to_app_root(self):
-        """Return to ROD TV home content by pressing BACK — never use HOME keycode."""
+        """Return to ROD TV home content by pressing BACK — never use HOME keycode.
+        Detects and cancels any 'Confirm Exit' dialog automatically."""
         rod_home = ["Popular Collections", "Continue Watching", "COMING SOON",
                     "RODtv", "Rodtv"]
-        for _ in range(8):
+        exit_dialog = ["Confirm Exit", "Are you sure you want to exit"]
+        for _ in range(10):
             if not self._adb.is_app_foreground("com.webnexs.rod_tv"):
                 self._ensure_in_app()
                 self._wait(3)
+                return
+            # If exit confirmation dialog appeared, cancel it
+            if self._inspector.any_text_visible(exit_dialog):
+                self._log.info("  Exit dialog detected — pressing CANCEL")
+                cancel = self._inspector.find_by_text("CANCEL") or \
+                         self._inspector.find_by_text("Cancel")
+                if cancel:
+                    cx, cy = cancel.center
+                    self._remote.tap(cx, cy, delay=0.5)
+                else:
+                    self._remote.back(delay=0.5)
+                self._wait(1)
                 return
             if self._inspector.any_text_visible(rod_home):
                 # Press RIGHT to move focus into content area (away from sidebar)
@@ -255,3 +269,25 @@ class BaseScenario:
                 return
             self._remote.back(delay=0.6)
         self._ensure_in_app()
+
+    def _safe_back(self, times: int = 1):
+        """Press BACK safely — stops and cancels exit dialog if it appears."""
+        exit_dialog = ["Confirm Exit", "Are you sure you want to exit"]
+        rod_home = ["Popular Collections", "Continue Watching", "COMING SOON",
+                    "RODtv", "Rodtv"]
+        for _ in range(times):
+            if self._inspector.any_text_visible(rod_home):
+                return  # already at root, stop
+            self._remote.back(delay=0.6)
+            self._wait(0.3)
+            if self._inspector.any_text_visible(exit_dialog):
+                self._log.info("  Exit dialog appeared — cancelling")
+                cancel = self._inspector.find_by_text("CANCEL") or \
+                         self._inspector.find_by_text("Cancel")
+                if cancel:
+                    cx, cy = cancel.center
+                    self._remote.tap(cx, cy, delay=0.5)
+                else:
+                    self._remote.back(delay=0.5)
+                self._wait(1)
+                return

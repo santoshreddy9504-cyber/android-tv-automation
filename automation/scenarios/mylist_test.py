@@ -88,7 +88,7 @@ class MyListTest(BaseScenario):
         )
 
         # ── 5. Navigate to My List section ───────────────────────────────
-        self._remote.back(2)
+        self._safe_back(1)
         self._wait(1)
         reached_mylist = self.step(
             "Navigate to My List section",
@@ -116,7 +116,7 @@ class MyListTest(BaseScenario):
             ))
 
         self._take_screenshot("mylist_complete")
-        self._remote.back(3)
+        self._go_to_app_root()
         self._result.finish()
         return self._result
 

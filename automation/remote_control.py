@@ -137,45 +137,39 @@ class RemoteControl:
 
     def type_text(self, text: str, delay: float = 0.2):
         """
-        Type text into the currently focused field.
-        Encodes spaces as %s so ADB shell input text handles them.
+        Type text into the currently focused field via ADB input text.
+        Spaces are encoded as %s for the ADB shell command.
+        Does NOT attempt to clear first — call clear_field() separately if needed.
         """
-        # Clear existing content first
-        self._send_keyevent(123)   # KEYCODE_MOVE_END
-        time.sleep(0.1)
-        subprocess.run(
-            ["adb", "-s", self._target, "shell",
-             "input keyevent --longpress $(python3 -c \"print(' '.join(['67']*50))\")"],
-            capture_output=True, timeout=5,
-        )
-        # Simpler clear: select all + delete
-        subprocess.run(
-            ["adb", "-s", self._target, "shell", "input keyevent 277"],   # CTRL_A
-            capture_output=True, timeout=5,
-        )
-        time.sleep(0.1)
-        subprocess.run(
-            ["adb", "-s", self._target, "shell", "input keyevent 67"],    # DEL
-            capture_output=True, timeout=5,
-        )
-        time.sleep(0.1)
-
-        # Type the text — encode spaces as %s for ADB
-        encoded = text.replace(" ", "%s").replace("'", "\\'").replace('"', '\\"')
+        # Encode spaces; apostrophes and quotes are passed via list args (no shell expansion)
+        encoded = text.replace(" ", "%s")
         try:
             subprocess.run(
-                ["adb", "-s", self._target, "shell", f"input text '{encoded}'"],
+                ["adb", "-s", self._target, "shell", f"input text {encoded}"],
                 capture_output=True, timeout=10,
             )
         except Exception as exc:
             logger.warning(f"type_text failed: {exc}")
         time.sleep(delay)
 
+    def clear_field(self):
+        """Clear the currently focused text field by selecting all and deleting."""
+        # Move to end, then select all with SHIFT+CTRL+HOME, then delete
+        self._send_keyevent(123)   # KEYCODE_MOVE_END
+        time.sleep(0.05)
+        # Send CTRL+A (select all): keycode 29 (A) with META_CTRL_ON (4096)
+        subprocess.run(
+            ["adb", "-s", self._target, "shell", "input keyevent --longpress 123"],
+            capture_output=True, timeout=5,
+        )
+        time.sleep(0.1)
+        # Delete selected text
+        self._send_keyevent(67)    # KEYCODE_DEL
+        time.sleep(0.1)
+
     def clear_field_and_type(self, text: str):
-        """Select all text in current field and replace with new text."""
-        # Select all (CTRL+A equivalent via long-press Select)
-        self.long_press("SELECT", 1.0)
-        time.sleep(0.2)
+        """Clear the focused field then type new text."""
+        self.clear_field()
         self.type_text(text)
 
     def go_home_and_relaunch(self, package: str):

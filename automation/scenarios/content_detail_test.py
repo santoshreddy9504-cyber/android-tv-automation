@@ -81,7 +81,7 @@ class ContentDetailTest(BaseScenario):
         self._take_screenshot("content_detail")
         self.step(
             "Back returns to browse screen",
-            action_fn=lambda: self._remote.back(2),
+            action_fn=lambda: self._safe_back(1),
             expected_fn=lambda: not self._on_detail_page(),
             timeout=8,
         )
