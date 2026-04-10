@@ -1,0 +1,17 @@
+# Core — no extra runtime deps needed for basic operation
+# (subprocess, threading, queue, logging, re, etc. are stdlib)
+
+# Rich CLI dashboard (highly recommended)
+# rich 12.x is the last version supporting Python 3.7
+rich>=10.0.0,<13.0.0
+
+# Web dashboard (optional — only needed with --web flag)
+# Flask 2.2.x is the last series supporting Python 3.7
+flask>=2.0.0,<3.0.0
+
+# Desktop notifications helper (optional)
+# plyer>=2.1.0        # cross-platform desktop notifications (alternative)
+
+# For future extension: pytest-based automated test integration
+# pytest>=7.0.0
+# pytest-html>=4.0.0
