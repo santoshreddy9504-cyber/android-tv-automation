@@ -172,15 +172,15 @@ class RemoteControl:
         self.clear_field()
         self.type_text(text)
 
-    def go_home_and_relaunch(self, package: str):
-        """Press home then relaunch app."""
+    def go_home_and_relaunch(self, package: str, activity: str = ".MainActivity"):
+        """Press home then relaunch app using the given activity."""
         self.home()
         time.sleep(1)
         subprocess.run(
             ["adb", "-s", self._target, "shell",
              f"am start -a android.intent.action.MAIN "
              f"-c android.intent.category.LEANBACK_LAUNCHER "
-             f"-n {package}/.MainActivity"],
+             f"-n {package}/{activity}"],
             capture_output=True, timeout=10,
         )
         time.sleep(3)

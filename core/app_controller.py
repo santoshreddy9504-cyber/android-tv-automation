@@ -55,13 +55,11 @@ class AppController:
         logger.info(f"Launching {self._package} ...")
 
         try:
-            if config.app.launch_activity:
-                cmd = f"am start -n {self._package}/{config.app.launch_activity}"
-            else:
-                # Use LEANBACK_LAUNCHER for Android TV apps (monkey LAUNCHER picks wrong app)
-                cmd = (f"am start -a android.intent.action.MAIN "
-                       f"-c android.intent.category.LEANBACK_LAUNCHER "
-                       f"-n {self._package}/.MainActivity")
+            act = config.app.launch_activity or ".MainActivity"
+            # Always use LEANBACK_LAUNCHER intent for Android TV apps
+            cmd = (f"am start -a android.intent.action.MAIN "
+                   f"-c android.intent.category.LEANBACK_LAUNCHER "
+                   f"-n {self._package}/{act}")
 
             output = self._adb.shell(cmd)
             logger.debug(f"Launch output: {output}")
@@ -183,11 +181,11 @@ class AppController:
     def bring_to_foreground(self) -> bool:
         """Bring a backgrounded app to the foreground using monkey (safest for Android TV)."""
         try:
-            # monkey is the most reliable way to bring any app to foreground on Android TV
+            act = config.app.launch_activity or ".MainActivity"
             self._adb.shell(
                 f"am start -a android.intent.action.MAIN "
                 f"-c android.intent.category.LEANBACK_LAUNCHER "
-                f"-n {self._package}/.MainActivity"
+                f"-n {self._package}/{act}"
             )
             time.sleep(3)
             if self.is_foreground():

@@ -65,7 +65,7 @@ class AppResumeTest(BaseScenario):
             action_fn=lambda: self._adb.shell(
                 f"am start -a android.intent.action.MAIN "
                 f"-c android.intent.category.LEANBACK_LAUNCHER "
-                f"-n {pkg}/.MainActivity"
+                f"-n {pkg}/{config.app.launch_activity}"
             ),
             expected_fn=lambda: self._app_in_foreground(pkg),
             sla_ms=3000,

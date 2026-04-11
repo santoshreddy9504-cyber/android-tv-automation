@@ -220,7 +220,7 @@ class TestReportHandler:
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>ROD TV QA Test Report — {suite.session_id}</title>
+<title>{config.app.app_name} QA Test Report — {suite.session_id}</title>
 <style>
   *{{box-sizing:border-box;margin:0;padding:0}}
   body{{font-family:'Segoe UI',Arial,sans-serif;background:#0b0d14;color:#e0e0e0;line-height:1.5}}
@@ -252,7 +252,7 @@ class TestReportHandler:
 <body>
 
 <header>
-  <h1>📺 ROD TV — QA Test Report</h1>
+  <h1>📺 {config.app.app_name} — QA Test Report</h1>
   <p>
     Session: <strong>{suite.session_id}</strong> &nbsp;|&nbsp;
     App: <strong>{config.app.package_name}</strong> &nbsp;|&nbsp;

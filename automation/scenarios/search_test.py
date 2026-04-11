@@ -91,14 +91,18 @@ class SearchTest(BaseScenario):
     # ── Helpers ───────────────────────────────────────────────────────────
 
     def _go_to_search(self):
-        """Navigate to Search within the ROD TV app via the left sidebar (y=575)."""
+        """Navigate to the Search section via the left sidebar."""
+        from config import config
+        sidebar_x = config.client.sidebar_x
+        search    = config.client.sidebar_item("Search")
+        search_y  = search.get("y", 575)
+
         self._go_to_app_root()
         self._wait(0.5)
         self._remote.left(1, delay=0.5)   # open sidebar
         self._wait(0.4)
         self._ensure_in_app()
-        # Tap the Search sidebar item (5th icon, y=575) — tap alone selects it
-        self._remote.tap(77, 575, delay=0.5)
+        self._remote.tap(sidebar_x, search_y, delay=0.5)
         self._wait(1.5)
         if self._on_search_screen():
             return

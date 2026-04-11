@@ -226,33 +226,34 @@ class BaseScenario:
         return self._inspector.is_text_visible(text)
 
     def _ensure_in_app(self) -> bool:
-        """If ROD TV left the foreground, relaunch it. Never use HOME keycode."""
+        """If the app left the foreground, relaunch it. Never use HOME keycode."""
         from config import config
         pkg = config.app.package_name
+        act = config.app.launch_activity
         if not self._adb.is_app_foreground(pkg):
-            self._log.warning("  App left foreground — relaunching ROD TV")
+            self._log.warning(f"  App left foreground — relaunching {config.app.app_name}")
             self._adb.shell(
                 f"am start -a android.intent.action.MAIN "
                 f"-c android.intent.category.LEANBACK_LAUNCHER "
-                f"-n {pkg}/.MainActivity"
+                f"-n {pkg}/{act}"
             )
             self._wait(5)
             return self._adb.is_app_foreground(pkg)
         return True
 
     def _go_to_app_root(self):
-        """Return to ROD TV home content by pressing BACK — never use HOME keycode.
-        Detects and cancels any 'Confirm Exit' dialog automatically."""
-        rod_home = ["Popular Collections", "Continue Watching", "COMING SOON",
-                    "RODtv", "Rodtv"]
-        exit_dialog = ["Confirm Exit", "Are you sure you want to exit"]
+        """Return to the app home screen by pressing BACK — never use HOME keycode.
+        Detects and cancels any exit-confirmation dialog automatically."""
+        from config import config
+        home_texts    = config.client.home_indicators
+        exit_texts    = config.client.exit_dialog_texts
+        pkg           = config.app.package_name
         for _ in range(10):
-            if not self._adb.is_app_foreground("com.webnexs.rod_tv"):
+            if not self._adb.is_app_foreground(pkg):
                 self._ensure_in_app()
                 self._wait(3)
                 return
-            # If exit confirmation dialog appeared, cancel it
-            if self._inspector.any_text_visible(exit_dialog):
+            if self._inspector.any_text_visible(exit_texts):
                 self._log.info("  Exit dialog detected — pressing CANCEL")
                 cancel = self._inspector.find_by_text("CANCEL") or \
                          self._inspector.find_by_text("Cancel")
@@ -263,24 +264,23 @@ class BaseScenario:
                     self._remote.back(delay=0.5)
                 self._wait(1)
                 return
-            if self._inspector.any_text_visible(rod_home):
-                # Press RIGHT to move focus into content area (away from sidebar)
+            if self._inspector.any_text_visible(home_texts):
                 self._remote.right(delay=0.4)
                 return
             self._remote.back(delay=0.6)
         self._ensure_in_app()
 
     def _safe_back(self, times: int = 1):
-        """Press BACK safely — stops and cancels exit dialog if it appears."""
-        exit_dialog = ["Confirm Exit", "Are you sure you want to exit"]
-        rod_home = ["Popular Collections", "Continue Watching", "COMING SOON",
-                    "RODtv", "Rodtv"]
+        """Press BACK safely — cancels exit dialog if it appears."""
+        from config import config
+        exit_texts = config.client.exit_dialog_texts
+        home_texts = config.client.home_indicators
         for _ in range(times):
-            if self._inspector.any_text_visible(rod_home):
+            if self._inspector.any_text_visible(home_texts):
                 return  # already at root, stop
             self._remote.back(delay=0.6)
             self._wait(0.3)
-            if self._inspector.any_text_visible(exit_dialog):
+            if self._inspector.any_text_visible(exit_texts):
                 self._log.info("  Exit dialog appeared — cancelling")
                 cancel = self._inspector.find_by_text("CANCEL") or \
                          self._inspector.find_by_text("Cancel")

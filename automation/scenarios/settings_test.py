@@ -115,14 +115,33 @@ class SettingsTest(BaseScenario):
     # ── Helpers ───────────────────────────────────────────────────────────
 
     def _go_to_settings(self):
-        """Navigate to Settings via ROD TV left sidebar (bottom icon ~y=665)."""
+        """Navigate to Settings via the left sidebar."""
+        from config import config
+        sidebar_x = config.client.sidebar_x
+        # Try known settings-like sidebar labels in priority order
+        for label in ["Account Info", "Settings", "Account", "Profile"]:
+            item = config.client.sidebar_item(label)
+            if item:
+                settings_y = item.get("y", 665)
+                break
+        else:
+            settings_y = 665   # last-resort fallback
+
         self._go_to_app_root()
         self._wait(0.5)
         self._remote.left(1, delay=0.5)
         self._wait(0.4)
         self._ensure_in_app()
-        for y in [665, 575, 485]:
-            self._remote.tap(77, y, delay=0.5)
+        self._remote.tap(sidebar_x, settings_y, delay=0.5)
+        self._wait(0.3)
+        self._remote.select()
+        self._wait(2)
+        if self._on_settings_screen():
+            return
+        # Try adjacent sidebar items if first tap didn't land on settings
+        for offset in [-90, 90]:
+            self._remote.left(1, delay=0.3)
+            self._remote.tap(sidebar_x, settings_y + offset, delay=0.5)
             self._wait(0.3)
             self._remote.select()
             self._wait(2)

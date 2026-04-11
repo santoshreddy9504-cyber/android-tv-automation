@@ -2,12 +2,12 @@
 TC013 — Pull-to-Refresh
 
 Verifies that a downward swipe gesture at the top of a scrollable
-content list triggers a data refresh in the ROD TV app.
+content list triggers a data refresh in the app under test.
 
-Test covers three surfaces where pull-to-refresh is commonly expected:
-  1. Home screen  — swipe down on the main content area
-  2. My List      — swipe down on the watchlist
-  3. Trending     — swipe down on the trending row
+The surfaces tested are taken from the client config (CLIENT_CONFIG in .env):
+  • The first sidebar item  (usually Home)
+  • The "My List" sidebar item (if configured)
+  • The "Trending" sidebar item (if configured)
 
 Each sub-test:
   a) navigates to the target screen,
@@ -20,6 +20,7 @@ Each sub-test:
 
 import time
 from automation.scenarios.base_scenario import BaseScenario, StepResult
+from config import config
 
 
 # Texts that indicate an active data-load / refresh is in progress
@@ -27,21 +28,6 @@ LOADING_INDICATORS = [
     "Loading", "Refreshing", "Please wait",
     "Updating", "Fetching", "Syncing",
 ]
-
-# Texts that confirm content is present after refresh
-CONTENT_INDICATORS = [
-    "Popular Collections", "Continue Watching", "COMING SOON",
-    "Watch Now", "Play", "Resume", "Movies", "Series",
-    "Live", "Sports", "My List", "Watchlist", "Trending",
-    "Top", "Featured",
-]
-
-# Sidebar tap targets  (same co-ordinates used by TC002)
-SIDEBAR = {
-    "Home":     (77, 215),
-    "Trending": (77, 395),
-    "My List":  (77, 485),
-}
 
 
 class PullToRefreshTest(BaseScenario):
@@ -55,21 +41,27 @@ class PullToRefreshTest(BaseScenario):
         self._wait(2)
         self._ensure_in_app()
 
-        # Detect physical screen resolution so the swipe lands in the right place
         width, height = self._get_screen_resolution()
         self._log.info(f"  Screen resolution: {width}x{height}")
 
-        # ── 1. Home screen pull-to-refresh ───────────────────────────────
-        self._navigate_to("Home")
-        self._step_pull_to_refresh("Home screen", width, height)
+        sidebar_items = config.client.sidebar_items
+        sidebar_x     = config.client.sidebar_x
 
-        # ── 2. My List pull-to-refresh ───────────────────────────────────
-        self._navigate_to("My List")
-        self._step_pull_to_refresh("My List", width, height)
+        # Determine which sidebar items to test pull-to-refresh on.
+        # Prefer Home, My List, Trending; fall back to first 3 items.
+        preferred = ["Home", "My List", "Trending"]
+        targets = [
+            item for item in sidebar_items
+            if item.get("label") in preferred
+        ]
+        if not targets:
+            targets = sidebar_items[:3]
 
-        # ── 3. Trending pull-to-refresh ──────────────────────────────────
-        self._navigate_to("Trending")
-        self._step_pull_to_refresh("Trending", width, height)
+        for item in targets:
+            label = item.get("label", "Unknown")
+            y     = item.get("y", 0)
+            self._navigate_to(label, sidebar_x, y)
+            self._step_pull_to_refresh(label, width, height)
 
         # Return to home so the next scenario starts cleanly
         self._go_to_app_root()
@@ -129,17 +121,13 @@ class PullToRefreshTest(BaseScenario):
 
     # ── Navigation helpers ─────────────────────────────────────────────────
 
-    def _navigate_to(self, section: str):
+    def _navigate_to(self, label: str, sidebar_x: int, y: int):
         """Tap the sidebar icon for the given section and wait for it to load."""
-        x, y = SIDEBAR[section]
-        self._log.info(f"  Navigating to {section} …")
-        # Open sidebar
+        self._log.info(f"  Navigating to {label} …")
         self._remote.left(1, delay=0.5)
         self._wait(0.3)
-        # Tap section icon
-        self._remote.tap(x, y, delay=0.7)
+        self._remote.tap(sidebar_x, y, delay=0.7)
         self._wait(2)
-        # Move focus into the content area
         self._remote.right(delay=0.4)
         self._wait(1)
         self._ensure_in_app()
@@ -150,9 +138,8 @@ class PullToRefreshTest(BaseScenario):
                           before_count: int, timeout: float = 6.0) -> bool:
         """
         Poll up to `timeout` seconds for evidence of a refresh:
-          • A loading/spinner text appears and then disappears, OR
-          • The content fingerprint changes (text set or item count differs).
-        Returns True if refresh was detected.
+          • A loading/spinner text appears, OR
+          • The content fingerprint changes.
         """
         deadline = time.time() + timeout
         saw_loading = False
@@ -162,14 +149,12 @@ class PullToRefreshTest(BaseScenario):
             current_texts = set(self._inspector.get_all_text())
             current_count = self._inspector.get_content_count()
 
-            # Check for transient loading indicator
             if not saw_loading:
                 loading = self._inspector.any_text_visible(LOADING_INDICATORS)
                 if loading:
                     self._log.info(f"  [{surface}] loading indicator: '{loading.text}'")
                     saw_loading = True
 
-            # Content fingerprint changed → refresh happened
             if current_texts != before_texts or current_count != before_count:
                 self._log.info(
                     f"  [{surface}] content changed "
@@ -177,18 +162,12 @@ class PullToRefreshTest(BaseScenario):
                 )
                 return True
 
-        # If we saw a loading indicator during the window, count it as a pass
-        # even if the final content set looks the same (same data refreshed).
         return saw_loading
 
     def _get_screen_resolution(self) -> tuple:
-        """
-        Query the device display size via `wm size`.
-        Falls back to 1920×1080 if the command fails.
-        """
+        """Query device display size via `wm size`. Falls back to 1920×1080."""
         try:
             out = self._adb.shell("wm size")
-            # Expected: "Physical size: 1920x1080"  or  "Override size: ..."
             for line in out.splitlines():
                 if "size:" in line.lower():
                     parts = line.split(":")[-1].strip().split("x")

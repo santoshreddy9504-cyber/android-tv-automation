@@ -223,7 +223,7 @@ def _print_summary(session: SessionManager):
     suite = _test_suite
 
     print("\n" + "=" * 65)
-    print("  QA TEST SUMMARY — ROD TV")
+    print(f"  QA TEST SUMMARY — {config.app.app_name}")
     print("=" * 65)
     print(f"  Session ID    : {stats.session_id}")
     print(f"  Duration      : {human_duration(stats.duration_seconds)}")

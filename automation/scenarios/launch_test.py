@@ -5,6 +5,7 @@ Verifies the app launches successfully and the home screen loads within SLA.
 
 import time
 from automation.scenarios.base_scenario import BaseScenario
+from config import config
 
 
 class AppLaunchTest(BaseScenario):
@@ -12,29 +13,21 @@ class AppLaunchTest(BaseScenario):
     SCENARIO_ID   = "TC001"
     SCENARIO_NAME = "App Launch & Home Screen Load"
 
-    HOME_INDICATORS = [
-        # ROD TV specific
-        "Popular Collections", "RODtv", "Rodtv", "COMING SOON",
-        "Continue Watching",
-        # Generic OTT home indicators
-        "Home", "Featured", "Trending", "Live", "Movies", "Series",
-        "Watch", "Popular", "New",
-    ]
-
     def run(self):
         self._log.info(f"=== {self.SCENARIO_ID}: {self.SCENARIO_NAME} ===")
+
+        pkg = config.app.package_name
+        act = config.app.launch_activity
+        home_indicators = config.client.home_indicators
 
         # Step 1 — Force stop to ensure cold start
         self.step(
             "Force stop app for cold start",
-            lambda: self._adb.shell(f"am force-stop {self._adb._device_target.split(':')[0] and 'com.webnexs.rod_tv'}"),
+            lambda: self._adb.shell(f"am force-stop {pkg}"),
         )
         self._wait(2)
 
         # Step 2 — Launch and measure cold start time
-        from config import config
-        pkg = config.app.package_name
-
         self._adb.shell(f"am force-stop {pkg}")
         self._wait(2)
 
@@ -43,9 +36,9 @@ class AppLaunchTest(BaseScenario):
             action_fn=lambda: self._adb.shell(
                 f"am start -a android.intent.action.MAIN "
                 f"-c android.intent.category.LEANBACK_LAUNCHER "
-                f"-n {pkg}/.MainActivity"
+                f"-n {pkg}/{act}"
             ),
-            expected_fn=lambda: self._inspector.any_text_visible(self.HOME_INDICATORS) is not None,
+            expected_fn=lambda: self._inspector.any_text_visible(home_indicators) is not None,
             sla_ms=8000,
             timeout=20,
             screenshot=True,

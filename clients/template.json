@@ -1,0 +1,48 @@
+{
+  "_comment": "Copy this file to clients/your_app.json, fill in every field, then set CLIENT_CONFIG=clients/your_app.json in .env",
+
+  "app_name":        "My App",
+  "package_name":    "com.example.myapp",
+  "launch_activity": ".MainActivity",
+
+  "home_indicators": [
+    "Home", "Featured", "Trending", "Watch Now"
+  ],
+
+  "login_screen_indicators": [
+    "Sign In", "Login", "Email", "Password"
+  ],
+
+  "exit_dialog_texts": [
+    "Exit", "Are you sure"
+  ],
+
+  "content_indicators": [
+    "Watch Now", "Play", "Featured", "Trending", "Live"
+  ],
+
+  "sidebar_x": 77,
+
+  "sidebar_items": [
+    {
+      "label": "Home",
+      "y": 200,
+      "indicators": ["Home", "Featured"]
+    },
+    {
+      "label": "Search",
+      "y": 400,
+      "indicators": ["Search", "Find"]
+    },
+    {
+      "label": "My List",
+      "y": 500,
+      "indicators": ["My List", "Watchlist", "Saved"]
+    },
+    {
+      "label": "Settings",
+      "y": 600,
+      "indicators": ["Settings", "Account", "Profile"]
+    }
+  ]
+}

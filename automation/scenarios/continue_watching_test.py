@@ -144,12 +144,12 @@ class ContinueWatchingTest(BaseScenario):
         return self._inspector.any_text_visible(self.PLAYER_INDICATORS) is not None
 
     def _go_home(self):
-        """Return to ROD TV root using BACK — never HOME (exits app)."""
+        """Return to app root using BACK — never HOME (exits app)."""
         self._go_to_app_root()
 
     def _on_home(self) -> bool:
-        rod_home = ["Popular Collections", "Continue Watching", "COMING SOON", "RODtv"]
-        return self._inspector.any_text_visible(rod_home) is not None
+        from config import config
+        return self._inspector.any_text_visible(config.client.home_indicators) is not None
 
     def _find_continue_watching_row(self) -> bool:
         """Scroll through home rows to find Continue Watching."""

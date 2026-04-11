@@ -1,6 +1,5 @@
 """
 TC000 — Login / Authentication
-Handles automatic login to ROD TV from the login screen.
 
 Flow:
   1. Check if already logged in (home indicators visible) — skip if so
@@ -10,6 +9,9 @@ Flow:
   5. Find & press Login/Sign In button
   6. Wait for home screen to confirm success
   7. Fail with screenshot if login fails or times out
+
+Home indicators and login screen texts are loaded from the client config
+(CLIENT_CONFIG in .env) so the same scenario works for any app.
 """
 
 import time
@@ -22,39 +24,23 @@ class LoginTest(BaseScenario):
     SCENARIO_ID   = "TC000"
     SCENARIO_NAME = "User Authentication (Login)"
 
-    # Texts that indicate the login screen is visible
-    LOGIN_SCREEN_TEXTS = [
-        "Sign In", "Login", "Log In", "Sign in",
-        "Email", "Email Address", "Username",
-        "Password", "Forgot Password",
-        "Enter your email", "Enter email",
-    ]
-
-    # Button labels to press to submit the form
+    # Button labels to press to submit the login form
     LOGIN_BUTTON_TEXTS = [
         "Sign In", "Login", "Log In", "SIGN IN", "LOGIN", "Submit", "SUBMIT",
         "Continue", "Next",
     ]
 
-    # Texts that mean we're now on the home screen (login succeeded)
-    HOME_TEXTS = [
-        # ROD TV specific
-        "Popular Collections", "RODtv", "Rodtv", "COMING SOON",
-        "Continue Watching",
-        # Generic
-        "Home", "Featured", "Trending", "Live", "Movies",
-        "Series", "Watch Now", "Popular", "New",
-    ]
-
     def run(self):
         self._log.info(f"=== {self.SCENARIO_ID}: {self.SCENARIO_NAME} ===")
-        cfg = config.login
+        cfg              = config.login
+        home_texts       = config.client.home_indicators
+        login_indicators = config.client.login_screen_indicators
 
         # ── 0. Already logged in? ─────────────────────────────────────────
         if cfg.skip_if_logged_in:
             self._log.info("  Checking if already logged in ...")
             self._wait(2)
-            if self._inspector.any_text_visible(self.HOME_TEXTS):
+            if self._inspector.any_text_visible(home_texts):
                 self._log.info("  ✅ Already on home screen — skipping login")
                 self.step(
                     "Already logged in — home screen detected",
@@ -66,11 +52,11 @@ class LoginTest(BaseScenario):
 
         # ── 1. Validate credentials are configured ────────────────────────
         if not cfg.email or not cfg.password:
-            self._log.error("  No credentials configured. Set config.login.email / password")
+            self._log.error("  No credentials configured. Set LOGIN_EMAIL / LOGIN_PASSWORD in .env")
             self._result.steps.append(StepResult(
                 "Credentials configured",
                 False,
-                "email/password not set in config.login — pass --email / --password",
+                "LOGIN_EMAIL / LOGIN_PASSWORD not set in .env (or passed via --email / --password)",
             ))
             self._result.finish()
             return self._result
@@ -86,7 +72,7 @@ class LoginTest(BaseScenario):
         login_appeared = self.step(
             "Login screen visible",
             action_fn=lambda: None,
-            expected_fn=lambda: self._inspector.any_text_visible(self.LOGIN_SCREEN_TEXTS) is not None,
+            expected_fn=lambda: self._inspector.any_text_visible(login_indicators) is not None,
             timeout=15,
             screenshot=True,
         )
@@ -96,7 +82,7 @@ class LoginTest(BaseScenario):
             self._remote.back()
             self._wait(2)
             # If home appeared after BACK, we were already logged in
-            if self._inspector.any_text_visible(self.HOME_TEXTS):
+            if self._inspector.any_text_visible(home_texts):
                 self._log.info("  Home visible after BACK — user was already logged in")
                 self._result.finish()
                 return self._result
@@ -130,7 +116,7 @@ class LoginTest(BaseScenario):
         login_success = self.step(
             "Login succeeded — home screen loaded",
             action_fn=lambda: None,
-            expected_fn=lambda: self._inspector.any_text_visible(self.HOME_TEXTS) is not None,
+            expected_fn=lambda: self._inspector.any_text_visible(home_texts) is not None,
             timeout=cfg.login_timeout,
             screenshot=True,
         )

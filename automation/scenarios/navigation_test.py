@@ -1,12 +1,14 @@
 """
 TC002 — Section Navigation & Content Load
-ROD TV uses a LEFT SIDEBAR for navigation (icon-only, x:0-154).
-Press LEFT from content to reach the sidebar, then UP/DOWN to move between items,
-then SELECT or RIGHT to open a section.
+
+The app under test uses a left sidebar for navigation.
+Sidebar structure (items, coordinates, and content indicators) is loaded
+from the client config file (CLIENT_CONFIG in .env).
 """
 
 import time
 from automation.scenarios.base_scenario import BaseScenario, StepResult
+from config import config
 
 
 class SectionNavigationTest(BaseScenario):
@@ -14,35 +16,26 @@ class SectionNavigationTest(BaseScenario):
     SCENARIO_ID   = "TC002"
     SCENARIO_NAME = "Section Navigation & Content Load"
 
-    # ROD TV left sidebar — confirmed labels from UI dump (sidebar open screenshot)
-    # x=77 for all items; y positions from uiautomator bounds
-    SIDEBAR_ITEMS = [
-        {"y": 215, "label": "Home",         "indicators": ["Popular Collections", "Continue Watching", "COMING SOON", "New On"]},
-        {"y": 305, "label": "Live Events",  "indicators": ["Live", "Live Events", "Channels", "Channel", "On Air", "LIVE"]},
-        {"y": 395, "label": "Trending",     "indicators": ["Trending", "Popular", "Top", "Featured", "Most Watched"]},
-        {"y": 485, "label": "My List",      "indicators": ["My List", "Watchlist", "Saved", "No items", "Your list", "Watch Later"]},
-        {"y": 575, "label": "Search",       "indicators": ["Search", "search", "Find", "Type to search"]},
-        {"y": 665, "label": "Account Info", "indicators": ["Account", "Profile", "Settings", "Sign", "Email", "Subscription", "Log"]},
-    ]
-
-    CONTENT_INDICATORS = [
-        "COMING SOON", "Popular Collections", "Continue Watching",
-        "RODtv", "Rodtv", "Watch Now", "Play", "Resume",
-        "left",   # "46m left" etc.
-        "Movies", "Series", "Live", "Sports",
-    ]
-
     def run(self):
         self._log.info(f"=== {self.SCENARIO_ID}: {self.SCENARIO_NAME} ===")
 
-        # ── 1. Confirm we start on ROD TV home ────────────────────────────
+        sidebar_items     = config.client.sidebar_items
+        sidebar_x         = config.client.sidebar_x
+        content_indicators = config.client.content_indicators
+
+        if not sidebar_items:
+            self._log.warning("  No sidebar_items defined in client config — skipping navigation test")
+            self._result.finish()
+            return self._result
+
+        # ── 1. Confirm app is on home screen ─────────────────────────────
         self._wait(2)
         self._ensure_in_app()
         start_texts = self._inspector.get_all_text()
         self._log.info(f"  Start screen texts: {start_texts[:6]}")
 
         # ── 2. Press LEFT to reach the sidebar ───────────────────────────
-        reached_sidebar = self.step(
+        self.step(
             "Press LEFT to open/focus the navigation sidebar",
             action_fn=lambda: self._remote.left(1, delay=0.6),
             expected_fn=lambda: self._sidebar_focused(),
@@ -51,41 +44,36 @@ class SectionNavigationTest(BaseScenario):
         )
 
         # ── 3. Test each sidebar item ────────────────────────────────────
-        # Start from the first item — navigate DOWN through each
-        # First go to top of sidebar
-        self._remote.up(5, delay=0.25)   # ensure we're at top item
+        self._remote.up(5, delay=0.25)   # ensure we start at the top item
         self._wait(0.5)
 
         items_tested = 0
         items_passed = 0
 
-        for i, item in enumerate(self.SIDEBAR_ITEMS):
-            label    = item["label"]
-            expected = item["indicators"]
+        for i, item in enumerate(sidebar_items):
+            label    = item.get("label", f"Item {i+1}")
+            y        = item.get("y", 0)
+            expected = item.get("indicators", [])
             self._log.info(f"  -- Testing sidebar item {i+1}: {label} --")
 
-            # Tap the sidebar item — tap alone selects/opens the section
-            self._remote.tap(77, item["y"], delay=0.6)
+            self._remote.tap(sidebar_x, y, delay=0.6)
             self._wait(2)
 
-            # Check we're still in ROD TV
             if not self._ensure_in_app():
                 self._log.warning(f"  App exited on item {i+1} — skipping")
                 break
 
-            # Check section-specific content loaded
-            texts = self._inspector.get_all_text()
+            texts         = self._inspector.get_all_text()
             section_match = bool(self._inspector.any_text_visible(expected))
-            generic_content = bool(self._inspector.any_text_visible(self.CONTENT_INDICATORS))
-            item_count = self._inspector.get_content_count()
-            passed_step = section_match or (generic_content and item_count > 1)
+            generic_ok    = bool(self._inspector.any_text_visible(content_indicators))
+            item_count    = self._inspector.get_content_count()
+            passed_step   = section_match or (generic_ok and item_count > 1)
 
             self._log.info(
-                f"    [{label}] section_match={section_match} content={generic_content} "
+                f"    [{label}] section_match={section_match} content={generic_ok} "
                 f"items={item_count} texts={texts[:4]}"
             )
 
-            # Screenshot
             self._take_screenshot(f"nav_item_{i+1}_{label.replace(' ', '_')}")
 
             self._result.steps.append(StepResult(
@@ -98,17 +86,15 @@ class SectionNavigationTest(BaseScenario):
             if passed_step:
                 items_passed += 1
 
-            # Return to sidebar for next item — tap the sidebar column
             self._remote.left(1, delay=0.4)
             self._wait(0.3)
 
-        # ── 4. Test scroll down on home content ──────────────────────────
-        # Return to home content
+        # ── 4. Scroll down — more rows load ──────────────────────────────
         self._remote.right(delay=0.5)
         self._wait(1)
         self._ensure_in_app()
 
-        passed, _ = self.timed_step(
+        self.timed_step(
             "Scroll down — more content rows load",
             action_fn=lambda: self._remote.down(3, delay=0.4),
             expected_fn=lambda: self._inspector.get_content_count() > 2,
@@ -117,7 +103,7 @@ class SectionNavigationTest(BaseScenario):
             screenshot=True,
         )
 
-        # ── 5. Scroll right — horizontal content row works ────────────────
+        # ── 5. Scroll right — horizontal cards work ───────────────────────
         self.step(
             "Scroll right — horizontal content cards navigate",
             action_fn=lambda: self._remote.right(3, delay=0.4),
@@ -133,9 +119,9 @@ class SectionNavigationTest(BaseScenario):
     # ── Helpers ───────────────────────────────────────────────────────────
 
     def _sidebar_focused(self) -> bool:
-        """Check if focus is now on the left sidebar (x < 154)."""
+        """Check if focus is now on the left sidebar."""
         focused = self._inspector.get_focused_element()
         if focused:
             cx = focused.bounds.get("x2", 999)
-            return cx <= 200  # sidebar items end at x=154
-        return True  # assume reached if no error
+            return cx <= 200
+        return True

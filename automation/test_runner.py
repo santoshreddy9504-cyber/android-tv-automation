@@ -79,10 +79,11 @@ class AutomatedTestRunner:
 
     def run(self):
         print("\n" + "═" * 65)
-        print("  🤖  AUTOMATED QA TEST RUN — ROD TV")
+        print(f"  🤖  AUTOMATED QA TEST RUN — {config.app.app_name}")
         print("═" * 65)
+        print(f"  Client  : {config.client.app_name}")
+        print(f"  Package : {config.app.package_name}")
         print(f"  Device  : {config.device.adb_target}")
-        print(f"  App     : {config.app.package_name}")
         print(f"  Started : {self._start_time.strftime('%Y-%m-%d %H:%M:%S')}")
         print("═" * 65 + "\n")
 
@@ -491,7 +492,7 @@ class AutomatedTestRunner:
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>ROD TV QA Test Report — {self._session_id}</title>
+<title>{config.app.app_name} QA Test Report — {self._session_id}</title>
 <style>
   *{{box-sizing:border-box;margin:0;padding:0}}
   body{{font-family:'Segoe UI',system-ui,Arial,sans-serif;background:#080a12;
@@ -585,7 +586,7 @@ class AutomatedTestRunner:
 
 <!-- ═══════════════════════ HEADER ═══════════════════════ -->
 <div class="report-header">
-  <h1>📺 ROD TV — QA Test Execution Report</h1>
+  <h1>📺 {config.app.app_name} — QA Test Execution Report</h1>
   <div class="subtitle">Automated End-to-End Test Suite · Android TV Platform</div>
   <div class="header-meta">
     <div class="header-meta-item">Report ID: <strong>{self._session_id}</strong></div>
@@ -703,7 +704,7 @@ class AutomatedTestRunner:
   <tr><td>RAM</td><td>{device_info.get('total_memory_mb',0):.0f} MB</td></tr>
   <tr><td>Connection</td><td>ADB over WiFi — {config.device.adb_target}</td></tr>
   <tr><td>App Package</td><td>{config.app.package_name}</td></tr>
-  <tr><td>App Version</td><td>ROD TV v2.0 (build 41)</td></tr>
+  <tr><td>App Version</td><td>{config.app.app_name}</td></tr>
   <tr><td>Test Account</td><td>{config.login.email}</td></tr>
   <tr><td>Automation</td><td>ADB Remote Control + UIAutomator Inspector</td></tr>
   <tr><td>Executed</td><td>{self._start_time.strftime('%Y-%m-%d %H:%M:%S')}</td></tr>
@@ -781,10 +782,10 @@ class AutomatedTestRunner:
 
 <div style="text-align:center;color:#1e2550;padding:24px;font-size:.75em;
             border-top:1px solid #0f1228;margin-top:20px">
-  ROD TV QA Automation System &nbsp;·&nbsp;
+  {config.app.app_name} QA Automation System &nbsp;·&nbsp;
   Report: {self._session_id} &nbsp;·&nbsp;
   Generated: {end_time.strftime('%Y-%m-%d %H:%M:%S')} &nbsp;·&nbsp;
-  Tester: santosh@revidd.com
+  Tester: {config.login.email or "—"}
 </div>
 
 </body>

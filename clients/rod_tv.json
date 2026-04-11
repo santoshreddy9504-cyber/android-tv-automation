@@ -1,0 +1,65 @@
+{
+  "_comment": "ROD TV (com.webnexs.rod_tv) — client config for the Android TV QA automation framework",
+
+  "app_name":        "ROD TV",
+  "package_name":    "com.webnexs.rod_tv",
+  "launch_activity": ".MainActivity",
+
+  "home_indicators": [
+    "Popular Collections", "RODtv", "Rodtv", "COMING SOON",
+    "Continue Watching", "Home", "Featured", "Trending",
+    "Live", "Movies", "Series", "Watch Now", "Popular", "New"
+  ],
+
+  "login_screen_indicators": [
+    "Sign In", "Login", "Log In", "Sign in",
+    "Email", "Email Address", "Username",
+    "Password", "Forgot Password",
+    "Enter your email", "Enter email"
+  ],
+
+  "exit_dialog_texts": [
+    "Confirm Exit", "Are you sure you want to exit"
+  ],
+
+  "content_indicators": [
+    "COMING SOON", "Popular Collections", "Continue Watching",
+    "RODtv", "Rodtv", "Watch Now", "Play", "Resume",
+    "Movies", "Series", "Live", "Sports"
+  ],
+
+  "sidebar_x": 77,
+
+  "sidebar_items": [
+    {
+      "label": "Home",
+      "y": 215,
+      "indicators": ["Popular Collections", "Continue Watching", "COMING SOON", "New On"]
+    },
+    {
+      "label": "Live Events",
+      "y": 305,
+      "indicators": ["Live", "Live Events", "Channels", "Channel", "On Air", "LIVE"]
+    },
+    {
+      "label": "Trending",
+      "y": 395,
+      "indicators": ["Trending", "Popular", "Top", "Featured", "Most Watched"]
+    },
+    {
+      "label": "My List",
+      "y": 485,
+      "indicators": ["My List", "Watchlist", "Saved", "No items", "Your list", "Watch Later"]
+    },
+    {
+      "label": "Search",
+      "y": 575,
+      "indicators": ["Search", "search", "Find", "Type to search"]
+    },
+    {
+      "label": "Account Info",
+      "y": 665,
+      "indicators": ["Account", "Profile", "Settings", "Sign", "Email", "Subscription", "Log"]
+    }
+  ]
+}
