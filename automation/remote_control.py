@@ -185,6 +185,41 @@ class RemoteControl:
         )
         time.sleep(3)
 
+    def swipe(self, x1: int, y1: int, x2: int, y2: int,
+              duration_ms: int = 600, delay: float = 0.5):
+        """
+        Swipe from (x1, y1) to (x2, y2) over duration_ms milliseconds.
+        Uses ADB input swipe which works on touch-enabled Android TV panels
+        and emulators.
+        """
+        try:
+            subprocess.run(
+                ["adb", "-s", self._target, "shell",
+                 f"input swipe {x1} {y1} {x2} {y2} {duration_ms}"],
+                capture_output=True, timeout=10,
+            )
+        except Exception as exc:
+            logger.warning(f"swipe({x1},{y1} → {x2},{y2}) failed: {exc}")
+        time.sleep(delay)
+
+    def pull_to_refresh(self, screen_width: int = 1920,
+                        screen_height: int = 1080, delay: float = 1.0):
+        """
+        Simulate a pull-to-refresh gesture.
+
+        Swipes downward from ~15 % of screen height to ~65 % of screen
+        height at the horizontal centre, mimicking a finger drag from the
+        top of a scrollable list to trigger a refresh.
+
+        After the swipe the method waits `delay` seconds so the app has
+        time to begin loading before the caller checks the UI.
+        """
+        cx   = screen_width  // 2
+        y_start = int(screen_height * 0.15)   # near top of content area
+        y_end   = int(screen_height * 0.65)   # drag ~half the screen down
+        logger.info(f"pull_to_refresh: swipe ({cx},{y_start}) → ({cx},{y_end})")
+        self.swipe(cx, y_start, cx, y_end, duration_ms=800, delay=delay)
+
     def _send_keyevent(self, code: int):
         try:
             subprocess.run(

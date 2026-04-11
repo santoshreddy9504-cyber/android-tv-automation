@@ -43,6 +43,7 @@ from automation.scenarios.settings_test import SettingsTest
 from automation.scenarios.app_resume_test import AppResumeTest
 from automation.scenarios.live_tv_test import LiveTVTest
 from automation.scenarios.subscription_test import SubscriptionTest
+from automation.scenarios.pull_to_refresh_test import PullToRefreshTest
 
 logger = logging.getLogger(__name__)
 
@@ -122,6 +123,7 @@ class AutomatedTestRunner:
             AppResumeTest,          # TC010 — background & resume
             LiveTVTest,             # TC011 — live TV / channels
             SubscriptionTest,       # TC012 — subscription & account
+            PullToRefreshTest,      # TC013 — pull-to-refresh gesture
         ]
 
         for ScenarioClass in scenarios:
