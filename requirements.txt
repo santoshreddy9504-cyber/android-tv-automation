@@ -1,6 +1,9 @@
 # Core — no extra runtime deps needed for basic operation
 # (subprocess, threading, queue, logging, re, etc. are stdlib)
 
+# Environment variable loader — reads credentials from .env file
+python-dotenv>=1.0.0
+
 # Rich CLI dashboard (highly recommended)
 # rich 12.x is the last version supporting Python 3.7
 rich>=10.0.0,<13.0.0

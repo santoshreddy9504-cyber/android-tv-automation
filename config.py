@@ -1,11 +1,19 @@
 """
 Central configuration for the Android TV Automation & Monitoring System.
-Edit this file to match your device and app under test.
+Credentials and device IP are loaded from a .env file — copy
+.env.example to .env and fill in your values before running.
 """
 
 import os
 from dataclasses import dataclass, field
 from typing import List
+
+# Load .env file if present (silently ignored if missing or dotenv not installed)
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass  # python-dotenv not installed — fall back to plain env vars / defaults
 
 
 # ---------------------------------------------------------------------------
@@ -23,9 +31,9 @@ REPORTS_DIR = os.path.join(OUTPUT_DIR, "reports")
 # ---------------------------------------------------------------------------
 @dataclass
 class DeviceConfig:
-    # ADB connection
-    device_ip: str = "192.168.2.29"         # Android TV IP
-    adb_port: int = 5555
+    # ADB connection — override via DEVICE_IP / ADB_PORT in .env
+    device_ip: str = field(default_factory=lambda: os.getenv("DEVICE_IP", "192.168.2.29"))
+    adb_port: int = field(default_factory=lambda: int(os.getenv("ADB_PORT", "5555")))
     connection_timeout: int = 30            # seconds to wait for ADB connect
     reconnect_retries: int = 5
     reconnect_delay: int = 10               # seconds between reconnect attempts
@@ -40,8 +48,11 @@ class DeviceConfig:
 # ---------------------------------------------------------------------------
 @dataclass
 class LoginConfig:
-    email:             str  = "santosh@revidd.com"   # ROD TV login email
-    password:          str  = "Revidd@123"           # ROD TV login password
+    # Loaded from .env → ROD_TV_EMAIL / ROD_TV_PASSWORD
+    # If the env vars are missing the fields are empty strings, which causes
+    # TC000 to fail fast with a clear "credentials not configured" message.
+    email:             str  = field(default_factory=lambda: os.getenv("ROD_TV_EMAIL", ""))
+    password:          str  = field(default_factory=lambda: os.getenv("ROD_TV_PASSWORD", ""))
     skip_if_logged_in: bool = True        # Skip login if home is already visible
     login_timeout:     int  = 30          # Seconds to wait for home after login
     # Text labels the login screen may use (case-insensitive)
