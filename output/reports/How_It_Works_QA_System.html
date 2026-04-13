@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>How Our QA System Works — Android TV Automation</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', system-ui, sans-serif; background: #f8fafc; color: #1e293b; font-size: 15px; line-height: 1.7; }
+
+.hero { background: linear-gradient(135deg, #0f172a, #1e3a5f); padding: 60px 40px; text-align: center; color: white; }
+.hero h1 { font-size: 36px; font-weight: 800; margin-bottom: 12px; }
+.hero p { color: #94a3b8; font-size: 16px; max-width: 600px; margin: 0 auto; }
+
+.container { max-width: 960px; margin: 0 auto; padding: 48px 24px; }
+
+h2 { font-size: 22px; font-weight: 800; color: #0f172a; margin: 48px 0 20px; display: flex; align-items: center; gap: 12px; }
+h2 .num { background: #0f172a; color: white; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; }
+
+p { color: #475569; margin-bottom: 14px; }
+
+.card { background: white; border: 1px solid #e2e8f0; border-radius: 16px; padding: 28px; margin-bottom: 16px; box-shadow: 0 1px 4px rgba(0,0,0,0.05); }
+.card h3 { font-size: 17px; font-weight: 700; color: #0f172a; margin-bottom: 10px; }
+.card p { color: #64748b; font-size: 14px; margin: 0; }
+
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+@media(max-width:680px){ .grid2,.grid3{ grid-template-columns:1fr; } }
+
+.step { display: flex; gap: 20px; margin-bottom: 28px; align-items: flex-start; }
+.step-num { background: #3b82f6; color: white; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 16px; flex-shrink: 0; margin-top: 2px; }
+.step-body h3 { font-size: 16px; font-weight: 700; color: #0f172a; margin-bottom: 6px; }
+.step-body p { color: #64748b; font-size: 14px; margin: 0; }
+
+.badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 700; margin: 3px; }
+.badge.blue { background: #dbeafe; color: #1d4ed8; }
+.badge.green { background: #dcfce7; color: #15803d; }
+.badge.red { background: #fee2e2; color: #b91c1c; }
+.badge.orange { background: #ffedd5; color: #c2410c; }
+.badge.purple { background: #f3e8ff; color: #7e22ce; }
+
+.highlight { background: #f0f9ff; border-left: 4px solid #3b82f6; border-radius: 0 10px 10px 0; padding: 16px 20px; margin: 20px 0; }
+.highlight p { color: #1e40af; margin: 0; font-size: 14px; }
+
+.flow { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin: 24px 0; }
+.flow-box { background: white; border: 2px solid #e2e8f0; border-radius: 10px; padding: 12px 18px; text-align: center; font-size: 13px; font-weight: 700; color: #0f172a; min-width: 100px; }
+.flow-box.dark { background: #0f172a; color: white; border-color: #0f172a; }
+.flow-box.blue { background: #3b82f6; color: white; border-color: #3b82f6; }
+.flow-box.green { background: #16a34a; color: white; border-color: #16a34a; }
+.flow-arrow { font-size: 20px; color: #94a3b8; }
+
+table { width: 100%; border-collapse: collapse; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,0.05); }
+th { background: #f1f5f9; color: #64748b; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; padding: 12px 16px; text-align: left; }
+td { padding: 12px 16px; border-bottom: 1px solid #f1f5f9; font-size: 14px; color: #334155; }
+tr:last-child td { border-bottom: none; }
+
+.result-pass { color: #16a34a; font-weight: 700; }
+.result-fail { color: #dc2626; font-weight: 700; }
+.result-slow { color: #d97706; font-weight: 700; }
+
+footer { background: #0f172a; color: #64748b; text-align: center; padding: 32px; font-size: 13px; margin-top: 60px; }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <h1>How Our QA System Works</h1>
+  <p>A simple explanation of how we automatically test Android TV apps — what tools we use, how it runs, and what it finds</p>
+</div>
+
+<div class="container">
+
+  <!-- WHAT IS IT -->
+  <h2><span class="num">1</span> What Is This System?</h2>
+  <p>We built a <strong>custom automated testing system</strong> that connects to the Android TV over Wi-Fi and tests the app automatically — just like a real user would, but faster and more consistent.</p>
+  <p>It does two things:</p>
+  <div class="grid2">
+    <div class="card">
+      <h3>🤖 Automated Testing</h3>
+      <p>The system opens the app, clicks through every screen, plays videos, searches for content, and checks everything works — all without anyone touching the TV. It measures how fast each step takes and compares it against a target time.</p>
+    </div>
+    <div class="card">
+      <h3>👁️ Silent Monitoring</h3>
+      <p>While a real person manually tests the app, the system watches silently in the background. It records the screen, takes screenshots every 30 seconds, and alerts if the app crashes — without interfering with the testing.</p>
+    </div>
+  </div>
+
+  <!-- HOW IT CONNECTS -->
+  <h2><span class="num">2</span> How Does It Connect to the TV?</h2>
+  <p>We use a tool called <strong>ADB (Android Debug Bridge)</strong> — this is Google's official tool for communicating with Android devices over a network.</p>
+
+  <div class="flow">
+    <div class="flow-box dark">Mac / Laptop</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box blue">Wi-Fi Network</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box dark">Android TV<br><span style="font-size:11px;font-weight:400">192.168.2.29</span></div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box green">ADB Connected</div>
+  </div>
+
+  <div class="highlight">
+    <p>📡 The TV and the laptop are on the same Wi-Fi. No cables needed. Once connected, we can control the TV remotely — press buttons, read the screen, record video, check memory usage — everything.</p>
+  </div>
+
+  <!-- HOW IT TESTS -->
+  <h2><span class="num">3</span> How Does Automated Testing Work? (Step by Step)</h2>
+
+  <div class="step">
+    <div class="step-num">1</div>
+    <div class="step-body">
+      <h3>Launch the App</h3>
+      <p>The system force-stops the app (like a fresh install) and opens it. It starts a timer to measure how long the home screen takes to appear. This is the "cold start" time.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">2</div>
+    <div class="step-body">
+      <h3>Read the Screen</h3>
+      <p>Every few seconds, it takes a snapshot of everything visible on the TV screen — all the text, buttons, and content titles. No camera needed — Android provides this data directly via ADB.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">3</div>
+    <div class="step-body">
+      <h3>Press Buttons & Navigate</h3>
+      <p>It sends remote control commands: UP, DOWN, LEFT, RIGHT, OK, BACK — exactly like pressing a real remote. It navigates through the sidebar, selects content, opens the video player, pauses, resumes, fast-forwards.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">4</div>
+    <div class="step-body">
+      <h3>Check & Verify</h3>
+      <p>After each action, it checks that the right thing appeared on screen. For example: after clicking "Trending", it verifies that trending content actually loaded. If the wrong content appears, or nothing loads within the time limit — it marks that step as FAILED.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">5</div>
+    <div class="step-body">
+      <h3>Measure Timing</h3>
+      <p>Every step has a time target (called an SLA). For example: the app should load in 8 seconds, video should start in 5 seconds, search results should appear in 4 seconds. If any step takes longer, it's flagged as SLOW even if it eventually worked.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">6</div>
+    <div class="step-body">
+      <h3>Record Everything</h3>
+      <p>The TV screen is recorded as a video for every test case. Screenshots are taken automatically. All results, timings, and errors are saved to a log file and turned into a report.</p>
+    </div>
+  </div>
+
+  <!-- WHAT IT MEASURES -->
+  <h2><span class="num">4</span> What Does It Measure?</h2>
+  <div class="grid3">
+    <div class="card">
+      <h3>⏱️ Speed</h3>
+      <p>How long each screen takes to load. Compared against SLA targets set by the team.</p>
+    </div>
+    <div class="card">
+      <h3>📱 Memory</h3>
+      <p>How much RAM the app uses. Checked every 30 seconds to detect memory leaks over time.</p>
+    </div>
+    <div class="card">
+      <h3>🖥️ CPU</h3>
+      <p>How hard the processor is working. Spikes during navigation indicate performance issues.</p>
+    </div>
+    <div class="card">
+      <h3>🎬 Frame Drops</h3>
+      <p>Percentage of frames that were dropped during rendering. High % = visible stuttering and jank.</p>
+    </div>
+    <div class="card">
+      <h3>💥 Crashes</h3>
+      <p>Any fatal exceptions in the app are detected instantly from the device logs and flagged as critical.</p>
+    </div>
+    <div class="card">
+      <h3>📺 Playback</h3>
+      <p>Video start time, buffering stalls, pause/resume response — all measured during playback tests.</p>
+    </div>
+  </div>
+
+  <!-- WHAT WE TESTED -->
+  <h2><span class="num">5</span> What We Tested & Results</h2>
+  <p>We ran <strong>2 apps</strong> through the system:</p>
+
+  <h3 style="margin: 20px 0 12px; font-size:16px; color:#0f172a;">App 1 — ROD TV (Automated Tests)</h3>
+  <table>
+    <thead><tr><th>Test</th><th>What Was Checked</th><th>Result</th><th>Finding</th></tr></thead>
+    <tbody>
+      <tr><td>Login</td><td>Is user logged in?</td><td class="result-pass">PASS</td><td>Session works correctly</td></tr>
+      <tr><td>Cold Start</td><td>App loads in 8 seconds?</td><td class="result-fail">FAIL</td><td>Took 40.7 seconds — 5× too slow</td></tr>
+      <tr><td>Navigation</td><td>All 6 menu sections load?</td><td class="result-pass">PASS</td><td>All sections loaded correctly</td></tr>
+      <tr><td>Video Playback</td><td>Video starts in 5 seconds?</td><td class="result-fail">FAIL</td><td>Took 22 seconds + 1 buffering stall</td></tr>
+      <tr><td>Stability</td><td>Frame drops below 15%?</td><td class="result-fail">FAIL</td><td>47.7% frame drops under stress</td></tr>
+      <tr><td>Search</td><td>Results load in 4 seconds?</td><td class="result-slow">SLOW</td><td>Took 24 seconds — worked but slow</td></tr>
+      <tr><td>Content Detail</td><td>Detail page loads?</td><td class="result-fail">FAIL</td><td>Page never loaded</td></tr>
+      <tr><td>My List</td><td>"Add to List" button exists?</td><td class="result-fail">FAIL</td><td>Button not found — feature missing?</td></tr>
+    </tbody>
+  </table>
+
+  <h3 style="margin: 28px 0 12px; font-size:16px; color:#0f172a;">App 2 — SouthStream (Silent Monitor during Manual Testing)</h3>
+  <table>
+    <thead><tr><th>What Happened</th><th>Time</th><th>Severity</th></tr></thead>
+    <tbody>
+      <tr><td>Crash #1 — Fatal Exception in React Native thread</td><td>15:12</td><td class="result-fail">CRITICAL</td></tr>
+      <tr><td>Crash #2 — Same crash repeated</td><td>15:53</td><td class="result-fail">CRITICAL</td></tr>
+      <tr><td>Crash #3 — Same crash repeated</td><td>15:58</td><td class="result-fail">CRITICAL</td></tr>
+      <tr><td>Playback stall detected (ExoPlayer)</td><td>16:14</td><td class="result-slow">WARNING</td></tr>
+      <tr><td>Crash #4 — Same crash repeated</td><td>16:18</td><td class="result-fail">CRITICAL</td></tr>
+    </tbody>
+  </table>
+
+  <div class="highlight" style="margin-top:16px;">
+    <p>🔴 <strong>Root Cause (SouthStream):</strong> All 4 crashes are caused by the same bug — a React Native FlatList component is trying to scroll to an item but is missing a required error handler called <code>onScrollToIndexFailed</code>. Adding this one handler will fix all 4 crashes.</p>
+  </div>
+
+  <!-- TOOLS USED -->
+  <h2><span class="num">6</span> Tools & Technologies Used</h2>
+  <div class="card">
+    <span class="badge blue">Python 3</span>
+    <span class="badge blue">ADB (Android Debug Bridge)</span>
+    <span class="badge blue">Wi-Fi Network</span>
+    <span class="badge green">adb screenrecord</span>
+    <span class="badge green">adb logcat</span>
+    <span class="badge green">adb uiautomator dump</span>
+    <span class="badge orange">dumpsys meminfo</span>
+    <span class="badge orange">dumpsys gfxinfo</span>
+    <span class="badge purple">HTML Report Generator</span>
+    <span class="badge purple">GitHub (report hosting)</span>
+    <p style="margin-top: 16px;">No third-party testing frameworks. No app code changes required. No special builds needed. Works on any Android TV app as-is.</p>
+  </div>
+
+  <!-- NO APP CHANGES -->
+  <h2><span class="num">7</span> Important — No Changes to the App Needed</h2>
+  <div class="card" style="border-left: 4px solid #16a34a;">
+    <h3>✅ Zero Impact on the App or Users</h3>
+    <p>Our system works entirely from the outside. We do not modify the app, do not add any tracking code, do not require a special debug build. The app being tested is exactly what the user would download from the Play Store. This means our test results reflect real-world user experience.</p>
+  </div>
+
+</div>
+
+<footer>
+  Android TV QA Automation System &nbsp;|&nbsp; Tested Apps: ROD TV &amp; SouthStream &nbsp;|&nbsp; April 2026
+</footer>
+
+</body>
+</html>
