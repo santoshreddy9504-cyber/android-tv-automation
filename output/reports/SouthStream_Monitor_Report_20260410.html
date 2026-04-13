@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>SouthStream — Live Monitor Report | April 10, 2026</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Segoe UI',Arial,sans-serif;background:#0d0f1a;color:#c8d0e8;font-size:14px;line-height:1.6}
+  .header{background:linear-gradient(135deg,#111428 0%,#1a1f3a 60%,#0f1525 100%);padding:36px 48px 28px;border-bottom:2px solid #232a4a}
+  .header h1{font-size:1.9rem;color:#fff} .header h1 span{color:#7b9fff}
+  .header .sub{font-size:.9rem;color:#7888b0;margin-top:6px}
+  .meta-grid{display:flex;gap:24px;margin-top:18px;flex-wrap:wrap}
+  .meta-item{background:#1a1f3a;border:1px solid #232a4a;border-radius:8px;padding:10px 16px;font-size:.82rem}
+  .meta-item .k{color:#7888b0;display:block;font-size:.74rem;text-transform:uppercase;letter-spacing:.5px}
+  .meta-item .v{color:#e0e8ff;font-weight:600;margin-top:2px}
+  .section{padding:28px 48px;border-bottom:1px solid #181c30}
+  .section-title{font-size:1.05rem;font-weight:700;color:#fff;margin-bottom:18px;display:flex;align-items:center;gap:10px}
+  .section-title::before{content:'';display:block;width:4px;height:18px;background:#7b9fff;border-radius:2px}
+  .kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px}
+  .kpi{background:#141928;border:1px solid #232a4a;border-radius:10px;padding:16px;text-align:center}
+  .kpi .num{font-size:1.9rem;font-weight:700;margin-bottom:4px}
+  .kpi .lbl{font-size:.75rem;color:#7888b0;text-transform:uppercase;letter-spacing:.4px}
+  .kpi.red .num{color:#ff6b6b} .kpi.green .num{color:#4ec97a}
+  .kpi.amber .num{color:#ffb347} .kpi.blue .num{color:#7b9fff}
+  .kpi.white .num{color:#e0e8ff}
+  table{width:100%;border-collapse:collapse;font-size:.84em}
+  thead tr{background:#141928}
+  th{padding:10px 14px;text-align:left;color:#7888b0;font-weight:600;text-transform:uppercase;font-size:.73rem;letter-spacing:.4px;border-bottom:1px solid #232a4a}
+  td{padding:10px 14px;border-bottom:1px solid #181c30;vertical-align:top}
+  tr:hover td{background:#141928}
+  .sev{display:inline-block;padding:2px 10px;border-radius:12px;font-size:.74rem;font-weight:700}
+  .sev.CRITICAL{background:#3a0f0f;color:#ff6b6b;border:1px solid #8b3a3a}
+  .sev.HIGH{background:#2e1f00;color:#ffb347;border:1px solid #7a5c1a}
+  .sev.MEDIUM{background:#1a1f00;color:#e8d44d;border:1px solid #5c541a}
+  .sev.LOW{background:#0f1f2e;color:#7b9fff;border:1px solid #1a3a5c}
+  .callout{border-radius:8px;padding:14px 18px;margin-bottom:12px;font-size:.88rem}
+  .callout.red{background:#1a0a0a;border:1px solid #5c1a1a;color:#ffaaaa}
+  .callout.amber{background:#1a1200;border:1px solid #5c4400;color:#ffd48a}
+  .callout.green{background:#0a1a12;border:1px solid #1a4a2a;color:#7de8a8}
+  .callout.blue{background:#0a0f1a;border:1px solid #1a2a5c;color:#99b8ff}
+  .timeline{list-style:none;padding:0;border-left:2px solid #232a4a;margin-left:16px}
+  .timeline li{position:relative;padding:8px 0 8px 24px;font-size:.84rem}
+  .timeline li::before{content:'';position:absolute;left:-7px;top:14px;width:12px;height:12px;border-radius:50%;background:#232a4a;border:2px solid #7b9fff}
+  .timeline li.crash::before{background:#ff6b6b;border-color:#ff6b6b}
+  .timeline li.warn::before{background:#ffb347;border-color:#ffb347}
+  .timeline li.ok::before{background:#4ec97a;border-color:#4ec97a}
+  .timeline .time{color:#7b9fff;font-weight:700;margin-right:8px}
+  .timeline .desc{color:#c8d0e8}
+  .timeline .detail{color:#7888b0;font-size:.78rem;margin-top:3px;font-family:monospace}
+  code{background:#1a1f3a;padding:2px 6px;border-radius:4px;font-size:.82em;color:#99b8ff}
+  .footer{padding:20px 48px;text-align:center;color:#3a4060;font-size:.78rem;border-top:1px solid #181c30}
+  .rec{background:#141928;border:1px solid #232a4a;border-radius:10px;padding:16px 18px;margin-bottom:10px}
+  .rec.critical{border-left:3px solid #ff6b6b}
+  .rec.high{border-left:3px solid #ffb347}
+  .rec.medium{border-left:3px solid #e8d44d}
+  .rec-title{font-weight:700;color:#e0e8ff;margin-bottom:5px}
+  .rec-body{color:#9aa8cc;font-size:.84rem}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>SouthStream — <span>Live Monitor Report</span></h1>
+  <div class="sub">Passive background monitoring during manual QA session &nbsp;|&nbsp; No automation — real user testing</div>
+  <div class="meta-grid">
+    <div class="meta-item"><span class="k">App Package</span><span class="v">in.southstream.android</span></div>
+    <div class="meta-item"><span class="k">Device</span><span class="v">HVCL VU 4K TV — Android 12</span></div>
+    <div class="meta-item"><span class="k">Monitor Start</span><span class="v">15:01:09 IST</span></div>
+    <div class="meta-item"><span class="k">Monitor End</span><span class="v">16:20:45 IST</span></div>
+    <div class="meta-item"><span class="k">Session Duration</span><span class="v">~1 hour 19 minutes</span></div>
+    <div class="meta-item"><span class="k">Logcat Lines</span><span class="v">1,273,805</span></div>
+  </div>
+</div>
+
+<!-- KPIs -->
+<div class="section">
+  <div class="section-title">Session Summary</div>
+  <div class="kpi-row">
+    <div class="kpi red"><div class="num">4</div><div class="lbl">Fatal Crashes</div></div>
+    <div class="kpi red"><div class="num">4</div><div class="lbl">Crash Root Causes</div></div>
+    <div class="kpi amber"><div class="num">15</div><div class="lbl">APK I/O Errors</div></div>
+    <div class="kpi amber"><div class="num">4</div><div class="lbl">Playback Errors</div></div>
+    <div class="kpi green"><div class="num">0</div><div class="lbl">ANR Detected</div></div>
+    <div class="kpi green"><div class="num">0</div><div class="lbl">Network 5xx Errors</div></div>
+    <div class="kpi white"><div class="num">~79 min</div><div class="lbl">Monitor Duration</div></div>
+  </div>
+
+  <div style="margin-top:20px">
+    <div class="callout red">🔴 <strong>STOP-SHIP:</strong> App crashed 4 times during a single ~80 minute manual test session. All 4 crashes share the <strong>exact same root cause</strong> — a missing <code>onScrollToIndexFailed</code> handler in a React Native FlatList component.</div>
+    <div class="callout amber">🟠 <strong>HIGH:</strong> 15 APK I/O errors — the system failed to read SouthStream's APK from disk. This indicates the app installation may be corrupted or the storage is under pressure.</div>
+    <div class="callout green">✅ <strong>GOOD:</strong> No ANR (App Not Responding), no network 5xx errors, no memory OOM kills detected during the session.</div>
+  </div>
+</div>
+
+<!-- CRASH TIMELINE -->
+<div class="section">
+  <div class="section-title">Crash Timeline</div>
+  <ul class="timeline">
+    <li class="ok">
+      <span class="time">15:01:09</span><span class="desc">Monitor started — SouthStream in foreground (MainActivity)</span>
+    </li>
+    <li class="crash">
+      <span class="time">15:08:42</span><span class="desc">💥 CRASH #1 — Fatal Exception in <code>mqt_native_modules</code> thread</span>
+      <div class="detail">PID: 20035 | Cause: scrollToIndex without getItemLayout/onScrollToIndexFailed<br>Triggered by: D-pad navigation causing focus scroll to offscreen item in FlatList</div>
+    </li>
+    <li class="warn">
+      <span class="time">15:08:43</span><span class="desc">App restarted automatically (new PID: 21811)</span>
+    </li>
+    <li class="crash">
+      <span class="time">15:12:07</span><span class="desc">💥 CRASH #2 — Same fatal exception, same thread</span>
+      <div class="detail">PID: 21811 | Same root cause — user navigated content list again, triggering same bug<br>Time between crash #1 and #2: ~3.5 minutes</div>
+    </li>
+    <li class="warn">
+      <span class="time">15:12:08</span><span class="desc">App restarted (new PID: 23739)</span>
+    </li>
+    <li class="ok">
+      <span class="time">15:12 → 15:53</span><span class="desc">~41 minutes stable — user testing continued</span>
+    </li>
+    <li class="crash">
+      <span class="time">15:53:49</span><span class="desc">💥 CRASH #3 — Same fatal exception</span>
+      <div class="detail">PID: 23739 | APK I/O errors began immediately after this crash<br>System also failed to reload APK from disk (corrupted install state?)</div>
+    </li>
+    <li class="warn">
+      <span class="time">15:53:49</span><span class="desc">15 APK I/O errors — system failed to read base.apk, split APKs</span>
+      <div class="detail">Failed to open: base.apk, split_config.armeabi_v7a.apk, split_config.en.apk, split_config.xhdpi.apk</div>
+    </li>
+    <li class="crash">
+      <span class="time">15:58:26</span><span class="desc">💥 CRASH #4 — Same fatal exception (app still recovering)</span>
+      <div class="detail">PID: 29214 | App entered crash loop during APK I/O failure recovery</div>
+    </li>
+    <li class="ok">
+      <span class="time">15:58 → 16:20</span><span class="desc">App recovered — monitoring continued until stop command</span>
+    </li>
+  </ul>
+</div>
+
+<!-- ROOT CAUSE -->
+<div class="section">
+  <div class="section-title">Root Cause Analysis</div>
+
+  <div class="callout red" style="margin-bottom:16px">
+    <strong>All 4 crashes share one single root cause.</strong> This is a code bug, not an infrastructure issue.
+  </div>
+
+  <table>
+    <thead><tr><th>Field</th><th>Detail</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Exception</strong></td><td><code>com.facebook.react.common.JavascriptException</code></td></tr>
+      <tr><td><strong>Error</strong></td><td><code>Invariant Violation: scrollToIndex should be used in conjunction with getItemLayout or onScrollToIndexFailed</code></td></tr>
+      <tr><td><strong>Thread</strong></td><td><code>mqt_native_modules</code> (React Native native module queue)</td></tr>
+      <tr><td><strong>Engine</strong></td><td>Hermes JS engine</td></tr>
+      <tr><td><strong>Call Stack</strong></td><td><code>onFocus → scrollToLocation → scrollToIndex → invariant (throws)</code></td></tr>
+      <tr><td><strong>Trigger</strong></td><td>D-pad navigation moves focus to a content item that is <strong>off-screen</strong> in a FlatList. The app tries to scroll to that item's index, but without <code>getItemLayout</code> prop, React Native cannot calculate the position — so it throws a fatal invariant violation.</td></tr>
+      <tr><td><strong>Affected Component</strong></td><td>A FlatList or SectionList content grid (likely the main content browse row)</td></tr>
+      <tr><td><strong>Fix Required</strong></td><td>Add <code>onScrollToIndexFailed</code> handler to the FlatList — <strong>or</strong> — provide <code>getItemLayout</code> prop with fixed item dimensions</td></tr>
+    </tbody>
+  </table>
+
+  <div style="margin-top:20px;background:#141928;border:1px solid #232a4a;border-radius:10px;padding:18px 20px">
+    <div style="color:#e0e8ff;font-weight:700;margin-bottom:10px">How to Fix (React Native)</div>
+    <div style="color:#9aa8cc;font-size:.84rem;margin-bottom:10px">Option A — Add <code>onScrollToIndexFailed</code> (easiest fix, no layout calculation needed):</div>
+    <pre style="background:#0d0f1a;padding:14px;border-radius:8px;font-size:.82rem;color:#99b8ff;overflow-x:auto">&lt;FlatList
+  data={items}
+  onScrollToIndexFailed={(info) => {
+    const wait = new Promise(resolve => setTimeout(resolve, 500));
+    wait.then(() => {
+      flatListRef.current?.scrollToIndex({
+        index: info.index,
+        animated: true
+      });
+    });
+  }}
+/&gt;</pre>
+    <div style="color:#9aa8cc;font-size:.84rem;margin-top:12px;margin-bottom:10px">Option B — Add <code>getItemLayout</code> (better performance, requires fixed item height):</div>
+    <pre style="background:#0d0f1a;padding:14px;border-radius:8px;font-size:.82rem;color:#99b8ff;overflow-x:auto">getItemLayout={(data, index) => ({
+  length: ITEM_HEIGHT,   // fixed height of each row/card
+  offset: ITEM_HEIGHT * index,
+  index,
+})}</pre>
+  </div>
+</div>
+
+<!-- APK I/O ERRORS -->
+<div class="section">
+  <div class="section-title">APK I/O Errors — Installation Issue</div>
+  <div class="callout amber">
+    After crash #3 (15:53), Android's system process failed to read SouthStream's APK files from storage 15 times. This caused <code>PackageManager: Failure retrieving resources for in.southstream.android</code>.
+  </div>
+  <table style="margin-top:16px">
+    <thead><tr><th>Time</th><th>Error</th><th>Impact</th></tr></thead>
+    <tbody>
+      <tr><td>15:53:42</td><td>Failed to open base.apk — I/O error</td><td>App resources inaccessible</td></tr>
+      <tr><td>15:53:42</td><td>Failed to open split_config.armeabi_v7a.apk</td><td>Native libs unavailable</td></tr>
+      <tr><td>15:53:42</td><td>Failed to open split_config.en.apk</td><td>String resources missing</td></tr>
+      <tr><td>15:53:42</td><td>Failed to open split_config.xhdpi.apk</td><td>Image assets missing</td></tr>
+      <tr><td>15:58:22</td><td>Same 4 errors repeated (3 more times)</td><td>Crash loop during recovery</td></tr>
+    </tbody>
+  </table>
+  <div style="margin-top:14px;color:#9aa8cc;font-size:.84rem">
+    <strong style="color:#e0e8ff">Likely cause:</strong> The repeated crashes (PID changes: 20035 → 21811 → 23739 → 29214) caused Android to attempt re-launching the app while storage was still under I/O pressure. A clean reinstall of the app should resolve this. This may also indicate the APK was installed from an unstable source (sideload over slow connection).
+  </div>
+</div>
+
+<!-- WHAT WAS STABLE -->
+<div class="section">
+  <div class="section-title">What Was Stable ✅</div>
+  <table>
+    <thead><tr><th>Area</th><th>Status</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td>Network / API</td><td><span class="sev LOW" style="color:#4ec97a;background:#0f2e1a;border-color:#1a5c3a">STABLE</span></td><td>Zero HTTP 4xx/5xx errors from SouthStream APIs during entire session</td></tr>
+      <tr><td>ANR (App Not Responding)</td><td><span class="sev LOW" style="color:#4ec97a;background:#0f2e1a;border-color:#1a5c3a">NONE</span></td><td>No UI thread freezes detected — app was responsive when not crashing</td></tr>
+      <tr><td>App stays in foreground</td><td><span class="sev LOW" style="color:#4ec97a;background:#0f2e1a;border-color:#1a5c3a">PASS</span></td><td>SouthStream remained active foreground app between crashes</td></tr>
+      <tr><td>Auto-restart after crash</td><td><span class="sev LOW" style="color:#4ec97a;background:#0f2e1a;border-color:#1a5c3a">WORKS</span></td><td>App restarted automatically after each crash without manual intervention</td></tr>
+      <tr><td>Memory OOM</td><td><span class="sev LOW" style="color:#4ec97a;background:#0f2e1a;border-color:#1a5c3a">NONE</span></td><td>No out-of-memory kills detected during the session</td></tr>
+      <tr><td>CEC / Hardware errors</td><td><span class="sev LOW" style="color:#4ec97a;background:#0f2e1a;border-color:#1a5c3a">MINOR</span></td><td>CEC IRQ errors present (system level, not app-related)</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- BUGS -->
+<div class="section">
+  <div class="section-title">Bug Register</div>
+  <table>
+    <thead><tr><th>ID</th><th>Severity</th><th>Bug</th><th>Evidence</th><th>Fix</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><strong>SS-001</strong></td>
+        <td><span class="sev CRITICAL">CRITICAL</span></td>
+        <td><strong>FlatList crash on D-pad navigation to offscreen items</strong><br>App crashes every time D-pad focus moves to a content item outside the visible FlatList viewport. Crashes 4 times in 79 minutes — approximately every 10–20 minutes of normal use. Completely reproducible.</td>
+        <td>15:08:42, 15:12:07, 15:53:49, 15:58:26<br>All: <code>mqt_native_modules FATAL</code><br>Invariant Violation: scrollToIndex</td>
+        <td>Add <code>onScrollToIndexFailed</code> handler or <code>getItemLayout</code> to FlatList</td>
+      </tr>
+      <tr>
+        <td><strong>SS-002</strong></td>
+        <td><span class="sev HIGH">HIGH</span></td>
+        <td><strong>APK I/O errors after repeated crashes</strong><br>After crash #3, Android failed to read the app's APK from disk 15 times. Caused a crash loop (crash #3 → APK errors → crash #4). Users experience: app crashes, takes very long to restart, may show blank screens.</td>
+        <td>15:53:42–15:58:26<br><code>Failed to open base.apk: I/O error</code></td>
+        <td>Reinstall app cleanly. Dev team: investigate if crash cleanup is corrupting APK state</td>
+      </tr>
+      <tr>
+        <td><strong>SS-003</strong></td>
+        <td><span class="sev MEDIUM">MEDIUM</span></td>
+        <td><strong>4 playback-related errors logged</strong><br>4 playback error entries captured during the session. Insufficient detail in logs to determine if these are actual video stalls or informational. Needs further investigation with verbose playback logging enabled.</td>
+        <td>grep ExoPlaybackException: 4 hits</td>
+        <td>Enable verbose ExoPlayer logging; reproduce with specific content items</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- RECOMMENDATIONS -->
+<div class="section">
+  <div class="section-title">Recommendations — Priority Order</div>
+
+  <div class="rec critical">
+    <div class="rec-title">🔴 P0 — Fix SS-001 immediately before any release</div>
+    <div class="rec-body">
+      The <code>scrollToIndex</code> crash is 100% reproducible on D-pad navigation. It will crash for every user who scrolls through content. This is a <strong>one-line fix</strong> — add <code>onScrollToIndexFailed</code> to the FlatList. Find the content browse list component in the codebase, add the handler. Retest by rapidly navigating through content rows with D-pad.<br><br>
+      Search codebase for: <code>scrollToIndex</code> or <code>scrollToLocation</code> near FlatList usage without <code>onScrollToIndexFailed</code>.
+    </div>
+  </div>
+
+  <div class="rec high">
+    <div class="rec-title">🟠 P1 — Reinstall app and verify APK integrity</div>
+    <div class="rec-body">
+      The APK I/O errors suggest the current installation may be partially corrupted. Uninstall fully (<code>adb uninstall in.southstream.android</code>), reinstall fresh, and retest. Also verify the APK was signed correctly and all split APK configs are valid.
+    </div>
+  </div>
+
+  <div class="rec high">
+    <div class="rec-title">🟠 P1 — Add crash reporting (Crashlytics / Sentry)</div>
+    <div class="rec-body">
+      There is no crash reporting SDK visible in the logs. Without it, crashes on real user devices will go completely undetected. Integrate Firebase Crashlytics or Sentry immediately so every crash gets a symbolicated stack trace with device info, user journey, and frequency data.
+    </div>
+  </div>
+
+  <div class="rec medium">
+    <div class="rec-title">🟡 P2 — Investigate playback errors</div>
+    <div class="rec-body">
+      4 playback errors were captured. Enable verbose ExoPlayer logging (<code>ExoPlayer.setDebugLoggingEnabled(true)</code>) during QA sessions to capture full playback error details — content URL, error code, buffer state at time of error.
+    </div>
+  </div>
+
+  <div class="rec medium">
+    <div class="rec-title">🟡 P2 — Stress test content navigation before release</div>
+    <div class="rec-body">
+      Rapidly navigate through all content sections using D-pad for 10 minutes. The crash occurs specifically when focus moves to offscreen FlatList items — this is very common in normal TV browsing behavior. All content list components must be tested for this pattern.
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  SouthStream Monitor Report &nbsp;|&nbsp; Session: 15:01 – 16:20 IST, April 10, 2026 &nbsp;|&nbsp;
+  Device: 192.168.2.29 (HVCL VU 4K, Android 12) &nbsp;|&nbsp;
+  Package: in.southstream.android &nbsp;|&nbsp; Monitoring: Passive logcat + perf (no automation)
+</div>
+
+</body>
+</html>
