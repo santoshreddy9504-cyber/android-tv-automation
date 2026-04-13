@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>SouthStream — Silent Monitor Report | April 13, 2026</title>
+<style>
+  :root {
+    --bg:#0f172a; --card:#1e293b; --card2:#263248; --text:#e2e8f0;
+    --muted:#94a3b8; --accent:#38bdf8; --border:#334155;
+    --red:#dc2626; --orange:#d97706; --green:#16a34a;
+  }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'Segoe UI',system-ui,sans-serif; background:var(--bg); color:var(--text); font-size:14px; line-height:1.7; }
+
+  .hero { background:linear-gradient(135deg,#0f172a,#1a0a2e,#0f172a); padding:48px 32px 36px; text-align:center; border-bottom:1px solid var(--border); }
+  .hero-badge { display:inline-block; background:rgba(220,38,38,0.15); border:1px solid rgba(220,38,38,0.4); color:#f87171; padding:4px 16px; border-radius:20px; font-size:11px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; margin-bottom:16px; }
+  .hero h1 { font-size:30px; font-weight:800; color:#f8fafc; margin-bottom:8px; }
+  .hero-sub { color:var(--muted); font-size:14px; margin-bottom:24px; }
+  .hero-stats { display:flex; justify-content:center; gap:40px; flex-wrap:wrap; }
+  .hs { text-align:center; }
+  .hs .v { font-size:28px; font-weight:800; display:block; }
+  .hs .l { font-size:11px; color:var(--muted); text-transform:uppercase; }
+
+  .container { max-width:1100px; margin:0 auto; padding:32px 24px; }
+  section { margin-bottom:40px; }
+  h2 { font-size:17px; font-weight:700; color:#f8fafc; margin-bottom:16px; padding-bottom:8px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:10px; }
+
+  .card { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:20px 24px; margin-bottom:12px; }
+  .card h3 { font-size:15px; font-weight:700; color:#f8fafc; margin-bottom:8px; }
+  .card p { color:var(--muted); font-size:13px; }
+
+  .crash-card { background:var(--card); border-radius:12px; padding:22px 24px; margin-bottom:14px; border-left:4px solid var(--red); }
+  .crash-header { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:10px; }
+  .crash-time { font-family:monospace; font-size:16px; font-weight:700; color:#f87171; }
+  .crash-title { font-size:15px; font-weight:700; color:#f8fafc; margin:4px 0 8px; }
+  .crash-detail { font-family:monospace; font-size:12px; background:#0f172a; border-radius:8px; padding:12px; color:#fca5a5; overflow-x:auto; margin-top:10px; white-space:pre-wrap; }
+  .crash-fix { background:#0c2d1a; border:1px solid #16a34a; border-radius:8px; padding:12px 14px; margin-top:10px; font-size:13px; color:#86efac; }
+  .crash-fix strong { color:#4ade80; }
+
+  .badge { display:inline-block; padding:3px 10px; border-radius:20px; font-size:11px; font-weight:700; }
+  .badge.red { background:#3b1919; color:#f87171; border:1px solid #7f1d1d; }
+  .badge.orange { background:#2d1d08; color:#fcd34d; border:1px solid #854d0e; }
+  .badge.green { background:#052e16; color:#4ade80; border:1px solid #15803d; }
+  .badge.blue { background:#0c2340; color:#7dd3fc; border:1px solid #0369a1; }
+
+  .alert { border-radius:10px; padding:14px 18px; margin-bottom:16px; border-left:4px solid; }
+  .alert.red { background:#3b1919; border-color:#dc2626; color:#fca5a5; }
+  .alert.orange { background:#2d1d08; border-color:#d97706; color:#fcd34d; }
+  .alert.green { background:#052e16; border-color:#16a34a; color:#86efac; }
+
+  .perf-row { display:flex; align-items:center; gap:10px; margin-bottom:10px; font-size:12px; }
+  .perf-label { width:80px; text-align:right; color:var(--muted); flex-shrink:0; font-family:monospace; }
+  .perf-track { flex:1; background:var(--card2); border-radius:4px; height:12px; overflow:hidden; }
+  .perf-fill { height:100%; border-radius:4px; }
+  .perf-val { width:100px; color:var(--text); font-size:11px; }
+
+  .ss-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(180px,1fr)); gap:10px; }
+  .ss-card { background:var(--card); border:1px solid var(--border); border-radius:8px; overflow:hidden; }
+  .ss-thumb { background:var(--card2); height:100px; display:flex; align-items:center; justify-content:center; flex-direction:column; gap:4px; color:var(--muted); font-size:11px; text-align:center; padding:8px; }
+  .ss-label { padding:8px 10px; font-size:11px; color:var(--muted); }
+  .ss-time { font-weight:700; color:var(--text); font-family:monospace; }
+  .ss-card.crash-moment { border-color:#dc2626; }
+  .ss-card.crash-moment .ss-thumb { background:#3b1919; }
+
+  .timeline { border-left:2px solid var(--border); margin-left:12px; padding-left:20px; }
+  .tl { position:relative; margin-bottom:18px; }
+  .tl::before { content:''; position:absolute; left:-27px; top:5px; width:12px; height:12px; border-radius:50%; background:var(--accent); border:2px solid var(--bg); }
+  .tl.crash::before { background:var(--red); }
+  .tl.warn::before { background:var(--orange); }
+  .tl.offline::before { background:#6b7280; }
+  .tl-time { font-size:11px; color:var(--muted); font-family:monospace; }
+  .tl-text { font-size:13px; margin-top:2px; }
+
+  table { width:100%; border-collapse:collapse; }
+  th { background:var(--card2); color:var(--muted); font-size:11px; text-transform:uppercase; padding:9px 14px; text-align:left; }
+  td { padding:9px 14px; border-bottom:1px solid var(--border); font-size:13px; }
+  tr:last-child td { border-bottom:none; }
+  .mono { font-family:monospace; font-size:12px; }
+
+  footer { text-align:center; padding:28px; color:var(--muted); font-size:12px; border-top:1px solid var(--border); margin-top:20px; }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-badge">Silent Monitor Report</div>
+  <h1>SouthStream — Manual QA Session</h1>
+  <div class="hero-sub">Background monitoring during manual testing &nbsp;|&nbsp; April 13, 2026 &nbsp;|&nbsp; 16:38 – 16:47 IST</div>
+  <div class="hero-stats">
+    <div class="hs"><span class="v" style="color:#f87171">2</span><span class="l">Crashes</span></div>
+    <div class="hs"><span class="v" style="color:#38bdf8">~9 min</span><span class="l">Session</span></div>
+    <div class="hs"><span class="v" style="color:#fcd34d">16</span><span class="l">Screenshots</span></div>
+    <div class="hs"><span class="v" style="color:#fb923c">84%</span><span class="l">Peak Frame Drop</span></div>
+    <div class="hs"><span class="v" style="color:#f87171">255MB</span><span class="l">Peak Memory</span></div>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- VERDICT -->
+  <div class="alert red" style="margin-top:0; border-radius:12px; padding:20px 24px;">
+    <strong style="font-size:16px;">🔴 STOP-SHIP — 2 Fatal Crashes in 9 Minutes</strong>
+    <p style="margin-top:6px; color:#fca5a5;">SouthStream crashed twice within the first 9 minutes of manual testing. Both are React Native crashes — different root causes. App went completely offline at 16:47. This app is not stable for users.</p>
+  </div>
+
+  <!-- CRASHES -->
+  <section>
+    <h2>💥 Crashes Detected</h2>
+
+    <div class="crash-card">
+      <div class="crash-header">
+        <div>
+          <div class="crash-time">Crash #1 — 16:39:40</div>
+          <div class="crash-title">Fatal Exception — React Native Native Modules Thread</div>
+        </div>
+        <span class="badge red">CRITICAL</span>
+      </div>
+      <p style="color:var(--muted); font-size:13px;">App was running in task t765. At 16:40:08 the activity switched to a new task (t770) and memory dropped from 170MB → 109MB — clear sign of a full app restart after crash.</p>
+      <div class="crash-detail">04-13 16:39:40.034  6953  6988 E AndroidRuntime: FATAL EXCEPTION: mqt_native_modules
+Process: in.southstream.android, PID: 6953</div>
+      <div class="crash-fix">
+        <strong>Root Cause:</strong> React Native native modules thread crashed. This is the thread that handles bridge communication between JS and native Android. A JS-side operation triggered an unhandled exception on the native side.<br><br>
+        <strong>Fix:</strong> Check for unhandled promise rejections and add error boundaries around native module calls. Enable crash reporting (Sentry/Firebase Crashlytics) to get the full JS stack trace.
+      </div>
+    </div>
+
+    <div class="crash-card">
+      <div class="crash-header">
+        <div>
+          <div class="crash-time">Crash #2 — 16:42:05</div>
+          <div class="crash-title">Trying to update non-existent view with tag 3217</div>
+        </div>
+        <span class="badge red">CRITICAL</span>
+      </div>
+      <p style="color:var(--muted); font-size:13px;">App was running in task t770 (post-crash restart). Crashed again at 16:42:05. Activity switched to new task t771, memory dropped from 240MB → 107MB.</p>
+      <div class="crash-detail">04-13 16:42:05.996  9392  9421 E AndroidRuntime: FATAL EXCEPTION: mqt_native_modules
+Process: in.southstream.android, PID: 9392
+com.facebook.react.uimanager.O: Trying to update non-existent view with tag 3217
+  at com.facebook.react.uimanager.I0.a0(SourceFile:55)
+  at com.facebook.react.uimanager.UIManagerModule.updateView(SourceFile:54)
+  at com.facebook.react.uimanager.ReanimatedUIManager.updateView(SourceFile:1)</div>
+      <div class="crash-fix">
+        <strong>Root Cause:</strong> React Native Reanimated tried to animate a UI component (tag 3217) that was already removed from the screen (unmounted). The animation was still running after the component was gone.<br><br>
+        <strong>Fix:</strong> Add cleanup in <code>useEffect</code> return function to cancel all shared value animations when a component unmounts. Use <code>cancelAnimation(sharedValue)</code> from react-native-reanimated before unmount.
+      </div>
+    </div>
+  </section>
+
+  <!-- PERFORMANCE -->
+  <section>
+    <h2>⚡ Performance During Session</h2>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+      <div class="card">
+        <h3>Memory (RSS)</h3>
+        <div class="perf-row"><span class="perf-label">16:38:23</span><div class="perf-track"><div class="perf-fill" style="width:58%; background:#3b82f6"></div></div><span class="perf-val">145 MB (Settings)</span></div>
+        <div class="perf-row"><span class="perf-label">16:38:58</span><div class="perf-track"><div class="perf-fill" style="width:59%; background:#3b82f6"></div></div><span class="perf-val">147 MB</span></div>
+        <div class="perf-row"><span class="perf-label">16:39:33</span><div class="perf-track"><div class="perf-fill" style="width:66%; background:#f59e0b"></div></div><span class="perf-val">166 MB ↑</span></div>
+        <div class="perf-row"><span class="perf-label">16:40:08</span><div class="perf-track"><div class="perf-fill" style="width:43%; background:#22c55e"></div></div><span class="perf-val">107 MB ↓ CRASH #1</span></div>
+        <div class="perf-row"><span class="perf-label">16:40:42</span><div class="perf-track"><div class="perf-fill" style="width:81%; background:#ef4444"></div></div><span class="perf-val">203 MB ↑ rapid</span></div>
+        <div class="perf-row"><span class="perf-label">16:41:18</span><div class="perf-track"><div class="perf-fill" style="width:100%; background:#ef4444"></div></div><span class="perf-val">249 MB ↑ PEAK</span></div>
+        <div class="perf-row"><span class="perf-label">16:42:01</span><div class="perf-track"><div class="perf-fill" style="width:94%; background:#ef4444"></div></div><span class="perf-val">235 MB</span></div>
+        <div class="perf-row"><span class="perf-label">16:42:35</span><div class="perf-track"><div class="perf-fill" style="width:42%; background:#22c55e"></div></div><span class="perf-val">105 MB ↓ CRASH #2</span></div>
+        <div class="perf-row"><span class="perf-label">16:43:08</span><div class="perf-track"><div class="perf-fill" style="width:74%; background:#f59e0b"></div></div><span class="perf-val">186 MB ↑</span></div>
+        <div class="perf-row"><span class="perf-label">16:47:27</span><div class="perf-track"><div class="perf-fill" style="width:94%; background:#ef4444"></div></div><span class="perf-val">236 MB (offline)</span></div>
+      </div>
+      <div class="card">
+        <h3>Frame Drops (Janky Frames %)</h3>
+        <div class="perf-row"><span class="perf-label">16:38:23</span><div class="perf-track"><div class="perf-fill" style="width:6%; background:#22c55e"></div></div><span class="perf-val">5.5%</span></div>
+        <div class="perf-row"><span class="perf-label">16:38:58</span><div class="perf-track"><div class="perf-fill" style="width:6%; background:#22c55e"></div></div><span class="perf-val">5.7%</span></div>
+        <div class="perf-row"><span class="perf-label">16:39:33</span><div class="perf-track"><div class="perf-fill" style="width:5%; background:#22c55e"></div></div><span class="perf-val">4.9%</span></div>
+        <div class="perf-row"><span class="perf-label">16:40:08</span><div class="perf-track"><div class="perf-fill" style="width:100%; background:#ef4444"></div></div><span class="perf-val" style="color:#f87171">100% ← CRASH</span></div>
+        <div class="perf-row"><span class="perf-label">16:40:42</span><div class="perf-track"><div class="perf-fill" style="width:100%; background:#ef4444"></div></div><span class="perf-val" style="color:#f87171">16.5% (78% legacy)</span></div>
+        <div class="perf-row"><span class="perf-label">16:41:18</span><div class="perf-track"><div class="perf-fill" style="width:100%; background:#ef4444"></div></div><span class="perf-val" style="color:#f87171">14.4% (84% legacy)</span></div>
+        <div class="perf-row"><span class="perf-label">16:42:01</span><div class="perf-track"><div class="perf-fill" style="width:100%; background:#f59e0b"></div></div><span class="perf-val">11.7% (65% legacy)</span></div>
+        <div class="perf-row"><span class="perf-label">16:42:35</span><div class="perf-track"><div class="perf-fill" style="width:100%; background:#ef4444"></div></div><span class="perf-val" style="color:#f87171">100% ← CRASH</span></div>
+        <div class="perf-row"><span class="perf-label">16:43:44</span><div class="perf-track"><div class="perf-fill" style="width:10%; background:#22c55e"></div></div><span class="perf-val">9.7%</span></div>
+        <div class="perf-row"><span class="perf-label">16:47:27</span><div class="perf-track"><div class="perf-fill" style="width:11%; background:#22c55e"></div></div><span class="perf-val">10.6%</span></div>
+        <p style="margin-top:10px; font-size:11px; color:var(--muted);">100% at crash moments = all frames dropped (app frozen). Legacy metric consistently 34–84% — severe rendering issues.</p>
+      </div>
+    </div>
+
+    <div style="margin-top:12px;">
+      <table style="background:var(--card); border-radius:10px; overflow:hidden;">
+        <thead><tr><th>Metric</th><th>Value</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td>Total crashes</td><td class="mono" style="color:#f87171">2 in 9 minutes</td><td><span class="badge red">CRITICAL</span></td></tr>
+          <tr><td>Time between crashes</td><td class="mono">~2.5 minutes</td><td><span class="badge red">VERY FREQUENT</span></td></tr>
+          <tr><td>Peak memory (RSS)</td><td class="mono">~255 MB</td><td><span class="badge orange">HIGH</span></td></tr>
+          <tr><td>Memory growth rate</td><td class="mono">~26 MB/min after restart</td><td><span class="badge orange">FAST LEAK</span></td></tr>
+          <tr><td>Frame drops at crash</td><td class="mono">100% (app frozen)</td><td><span class="badge red">FAIL</span></td></tr>
+          <tr><td>Frame drops (normal)</td><td class="mono">5–16%</td><td><span class="badge orange">BORDERLINE</span></td></tr>
+          <tr><td>App offline after 16:47</td><td class="mono">TV disconnected</td><td><span class="badge red">SESSION ENDED</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- TIMELINE -->
+  <section>
+    <h2>🕐 Session Timeline</h2>
+    <div class="timeline">
+      <div class="tl"><div class="tl-time">16:38:23</div><div class="tl-text">Monitor started — TV was in Settings, MEM: 145MB, frames: 5.5%</div></div>
+      <div class="tl"><div class="tl-time">16:38:58</div><div class="tl-text">SouthStream opened — manual testing begins (task t765)</div></div>
+      <div class="tl warn"><div class="tl-time">16:39:33</div><div class="tl-text">Memory climbing: 166MB — app loading content</div></div>
+      <div class="tl crash"><div class="tl-time">16:39:40</div><div class="tl-text"><strong>🔴 CRASH #1</strong> — Fatal Exception on mqt_native_modules thread (PID 6953)</div></div>
+      <div class="tl"><div class="tl-time">16:40:08</div><div class="tl-text">App restarted (new task t770) — MEM dropped to 107MB, 100% frame drop on startup</div></div>
+      <div class="tl warn"><div class="tl-time">16:40:42</div><div class="tl-text">Memory rapidly rising again: 203MB — Reanimated animations active</div></div>
+      <div class="tl warn"><div class="tl-time">16:41:18</div><div class="tl-text">Peak memory: 249MB — Legacy frame drops 84% (heavy rendering load)</div></div>
+      <div class="tl crash"><div class="tl-time">16:42:05</div><div class="tl-text"><strong>🔴 CRASH #2</strong> — Reanimated tried to update unmounted view tag 3217</div></div>
+      <div class="tl"><div class="tl-time">16:42:35</div><div class="tl-text">App restarted again (new task t771) — MEM dropped to 105MB</div></div>
+      <div class="tl"><div class="tl-time">16:43–16:47</div><div class="tl-text">App stable — memory gradually rising (186MB → 236MB), frames improving (9–10%)</div></div>
+      <div class="tl offline"><div class="tl-time">16:47:27</div><div class="tl-text">TV went offline — device disconnected. Session ended.</div></div>
+    </div>
+  </section>
+
+  <!-- SCREENSHOTS -->
+  <section>
+    <h2>📸 Screenshots (16 captured, every 30s)</h2>
+    <div class="ss-grid">
+      <div class="ss-card"><img src="../screenshots/ss_manual_20260413_163823_16_38_23_ss1.png" style="width:100%;display:block;"><div class="ss-label"><span class="ss-time">16:38:23</span><br>Settings screen | MEM: 145MB | 5.5%</div></div>
+      <div class="ss-card"><img src="../screenshots/ss_manual_20260413_163823_16_38_58_ss2.png" style="width:100%;display:block;"><div class="ss-label"><span class="ss-time">16:38:58</span><br>SouthStream open | MEM: 147MB | 5.7%</div></div>
+      <div class="ss-card"><img src="../screenshots/ss_manual_20260413_163823_16_39_33_ss3.png" style="width:100%;display:block;"><div class="ss-label"><span class="ss-time">16:39:33</span><br>Manual testing | MEM: 166MB | 4.9%</div></div>
+      <div class="ss-card crash-moment"><img src="../screenshots/ss_manual_20260413_163823_16_40_08_ss4.png" style="width:100%;display:block;"><div class="ss-label"><span class="ss-time" style="color:#f87171">16:40:08</span><br>After CRASH #1 | MEM: 107MB | 100%</div></div>
+      <div class="ss-card"><img src="../screenshots/ss_manual_20260413_163823_16_40_42_ss5.png" style="width:100%;display:block;"><div class="ss-label"><span class="ss-time">16:40:42</span><br>App restarted | MEM: 203MB | 16.5%</div></div>
+      <div class="ss-card"><img src="../screenshots/ss_manual_20260413_163823_16_41_18_ss6.png" style="width:100%;display:block;"><div class="ss-label"><span class="ss-time">16:41:18</span><br>Memory peak | MEM: 249MB | 14.4%</div></div>
+      <div class="ss-card"><img src="../screenshots/ss_manual_20260413_163823_16_42_01_ss7.png" style="width:100%;display:block;"><div class="ss-label"><span class="ss-time">16:42:01</span><br>Pre-crash #2 | MEM: 235MB | 11.7%</div></div>
+      <div class="ss-card crash-moment"><img src="../screenshots/ss_manual_20260413_163823_16_42_35_ss8.png" style="width:100%;display:block;"><div class="ss-label"><span class="ss-time" style="color:#f87171">16:42:35</span><br>After CRASH #2 | MEM: 105MB | 100%</div></div>
+      <div class="ss-card"><img src="../screenshots/ss_manual_20260413_163823_16_43_08_ss9.png" style="width:100%;display:block;"><div class="ss-label"><span class="ss-time">16:43:08</span><br>App restarted | MEM: 186MB | 14.0%</div></div>
+      <div class="ss-card"><img src="../screenshots/ss_manual_20260413_163823_16_43_44_ss10.png" style="width:100%;display:block;"><div class="ss-label"><span class="ss-time">16:43:44</span><br>Stable | MEM: 188MB | 9.7%</div></div>
+      <div class="ss-card"><img src="../screenshots/ss_manual_20260413_163823_16_44_21_ss11.png" style="width:100%;display:block;"><div class="ss-label"><span class="ss-time">16:44:21</span><br>Stable | MEM: 226MB | 9.2%</div></div>
+      <div class="ss-card"><img src="../screenshots/ss_manual_20260413_163823_16_44_59_ss12.png" style="width:100%;display:block;"><div class="ss-label"><span class="ss-time">16:44:59</span><br>Stable | MEM: 221MB | 8.6%</div></div>
+      <div class="ss-card"><img src="../screenshots/ss_manual_20260413_163823_16_45_35_ss13.png" style="width:100%;display:block;"><div class="ss-label"><span class="ss-time">16:45:35</span><br>Stable | MEM: 202MB | 7.6%</div></div>
+      <div class="ss-card"><img src="../screenshots/ss_manual_20260413_163823_16_46_09_ss14.png" style="width:100%;display:block;"><div class="ss-label"><span class="ss-time">16:46:09</span><br>Stable | MEM: 213MB | 5.9%</div></div>
+      <div class="ss-card"><img src="../screenshots/ss_manual_20260413_163823_16_46_48_ss15.png" style="width:100%;display:block;"><div class="ss-label"><span class="ss-time">16:46:48</span><br>Stable | MEM: 230MB | 7.5%</div></div>
+      <div class="ss-card"><img src="../screenshots/ss_manual_20260413_163823_16_47_27_ss16.png" style="width:100%;display:block;"><div class="ss-label"><span class="ss-time">16:47:27</span><br>Last capture | MEM: 236MB | 10.6%</div></div>
+    </div>
+  </section>
+
+  <!-- BUGS -->
+  <section>
+    <h2>🐛 Bugs to Fix</h2>
+    <table style="background:var(--card); border-radius:10px; overflow:hidden;">
+      <thead><tr><th>Bug</th><th>Priority</th><th>Fix</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>Crash #1</strong> — mqt_native_modules Fatal Exception</td>
+          <td><span class="badge red">P0</span></td>
+          <td style="color:var(--muted);">Add error boundaries, handle unhandled promise rejections. Enable Sentry/Crashlytics for full JS stack trace.</td>
+        </tr>
+        <tr>
+          <td><strong>Crash #2</strong> — Reanimated updating unmounted view tag 3217</td>
+          <td><span class="badge red">P0</span></td>
+          <td style="color:var(--muted);">Add <code>cancelAnimation()</code> in useEffect cleanup. Cancel all shared value animations before component unmounts.</td>
+        </tr>
+        <tr>
+          <td><strong>Memory leak</strong> — grows ~26MB/min after each crash restart</td>
+          <td><span class="badge orange">P1</span></td>
+          <td style="color:var(--muted);">Profile with Android Profiler. Likely unreleased event listeners or image cache not cleared on navigation.</td>
+        </tr>
+        <tr>
+          <td><strong>Legacy frame drops 34–84%</strong> — heavy rendering</td>
+          <td><span class="badge orange">P1</span></td>
+          <td style="color:var(--muted);">Optimize FlatList — add windowSize, removeClippedSubviews, getItemLayout. Reduce re-renders from Reanimated.</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- RECORDINGS -->
+  <section>
+    <h2>🎬 Screen Recordings (3 Segments)</h2>
+    <div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:16px;">
+
+      <div class="card" style="border-left:4px solid #dc2626;">
+        <h3 style="color:#f87171;">Segment 1 — 16:38 to 16:41</h3>
+        <p style="margin-bottom:12px;">App opens → manual testing → <strong style="color:#f87171">Crash #1 at 16:39:40</strong></p>
+        <video controls style="width:100%; border-radius:8px; background:#000;" preload="metadata">
+          <source src="../recordings/southstream_manual_20260413_163823_seg1.mp4" type="video/mp4">
+        </video>
+        <p style="margin-top:8px; font-size:11px; color:var(--muted);">10 MB &nbsp;|&nbsp; Contains Crash #1 — mqt_native_modules Fatal Exception</p>
+      </div>
+
+      <div class="card" style="border-left:4px solid #dc2626;">
+        <h3 style="color:#f87171;">Segment 2 — 16:41 to 16:44</h3>
+        <p style="margin-bottom:12px;">App restart → testing → <strong style="color:#f87171">Crash #2 at 16:42:05</strong></p>
+        <video controls style="width:100%; border-radius:8px; background:#000;" preload="metadata">
+          <source src="../recordings/southstream_manual_20260413_163823_seg2.mp4" type="video/mp4">
+        </video>
+        <p style="margin-top:8px; font-size:11px; color:var(--muted);">6.4 MB &nbsp;|&nbsp; Contains Crash #2 — Reanimated unmounted view</p>
+      </div>
+
+      <div class="card" style="border-left:4px solid #16a34a;">
+        <h3 style="color:#4ade80;">Segment 3 — 16:44 to 16:47</h3>
+        <p style="margin-bottom:12px;">App restart → stable session → TV goes offline</p>
+        <video controls style="width:100%; border-radius:8px; background:#000;" preload="metadata">
+          <source src="../recordings/southstream_manual_20260413_163823_seg3.mp4" type="video/mp4">
+        </video>
+        <p style="margin-top:8px; font-size:11px; color:var(--muted);">7.4 MB &nbsp;|&nbsp; Stable run, no crash — TV disconnected at end</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- COMPARISON -->
+  <section>
+    <h2>📊 Comparison with Previous Session (April 10)</h2>
+    <table style="background:var(--card); border-radius:10px; overflow:hidden;">
+      <thead><tr><th>Metric</th><th>April 10 (79 min)</th><th>April 13 (9 min)</th><th>Trend</th></tr></thead>
+      <tbody>
+        <tr><td>Crashes</td><td>4 crashes</td><td>2 crashes</td><td style="color:#f87171">Still crashing — not fixed</td></tr>
+        <tr><td>Crash type</td><td>scrollToIndex FlatList</td><td>Reanimated + Native modules</td><td style="color:#fcd34d">New crash types found</td></tr>
+        <tr><td>Time to first crash</td><td>~11 minutes</td><td>~1.5 minutes</td><td style="color:#f87171">Getting worse</td></tr>
+        <tr><td>Peak memory</td><td>~403 MB</td><td>~255 MB</td><td style="color:#4ade80">Lower (shorter session)</td></tr>
+        <tr><td>Frame drops</td><td>13–14%</td><td>5–16%</td><td style="color:#fcd34d">Similar range</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+</div>
+
+<footer>
+  SouthStream Silent Monitor Report &nbsp;|&nbsp; April 13, 2026 &nbsp;|&nbsp; Android TV QA Automation System<br>
+  Session: 16:38:23 – 16:47:27 IST &nbsp;|&nbsp; Device: HVCL VU 4K (Android 12)
+</footer>
+
+</body>
+</html>
