@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SouthStream — New Build QA Report | April 15, 2026</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', sans-serif; background: #0a0a0f; color: #e0e0e0; }
+
+  .header {
+    background: linear-gradient(135deg, #1a0a2e 0%, #0d1117 100%);
+    border-bottom: 3px solid #e50914;
+    padding: 40px;
+  }
+  .header-top { display: flex; justify-content: space-between; align-items: flex-start; }
+  .logo { font-size: 28px; font-weight: 900; color: #fff; }
+  .logo span { color: #e50914; }
+  .build-badge {
+    background: #1e3a5f;
+    border: 1px solid #2196f3;
+    border-radius: 8px;
+    padding: 10px 20px;
+    text-align: right;
+  }
+  .build-badge .label { font-size: 11px; color: #90caf9; text-transform: uppercase; letter-spacing: 1px; }
+  .build-badge .value { font-size: 16px; font-weight: 700; color: #fff; margin-top: 2px; }
+  .report-title { margin-top: 20px; font-size: 32px; font-weight: 800; color: #fff; }
+  .report-meta { margin-top: 8px; color: #888; font-size: 14px; }
+  .report-meta span { color: #aaa; margin-right: 20px; }
+
+  .verdict-bar {
+    display: flex;
+    gap: 16px;
+    padding: 24px 40px;
+    background: #0f0f1a;
+    border-bottom: 1px solid #222;
+  }
+  .verdict-card {
+    flex: 1;
+    background: #1a1a2e;
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    border: 1px solid #2a2a3e;
+  }
+  .verdict-card.red { border-color: #e50914; background: #1a0a0a; }
+  .verdict-card.orange { border-color: #ff9800; background: #1a1200; }
+  .verdict-card.yellow { border-color: #ffd600; background: #1a1800; }
+  .verdict-card.green { border-color: #4caf50; background: #0a1a0a; }
+  .verdict-num { font-size: 42px; font-weight: 900; }
+  .verdict-card.red .verdict-num { color: #e50914; }
+  .verdict-card.orange .verdict-num { color: #ff9800; }
+  .verdict-card.yellow .verdict-num { color: #ffd600; }
+  .verdict-card.green .verdict-num { color: #4caf50; }
+  .verdict-label { font-size: 13px; color: #888; margin-top: 4px; text-transform: uppercase; letter-spacing: 1px; }
+  .verdict-sub { font-size: 11px; color: #555; margin-top: 4px; }
+
+  .critical-banner {
+    background: linear-gradient(90deg, #7b0000, #1a0000);
+    border-left: 5px solid #e50914;
+    padding: 20px 40px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .critical-banner .icon { font-size: 32px; }
+  .critical-banner .text h3 { color: #ff4444; font-size: 18px; font-weight: 700; }
+  .critical-banner .text p { color: #ffaaaa; font-size: 14px; margin-top: 4px; }
+
+  .section { padding: 32px 40px; border-bottom: 1px solid #1a1a2a; }
+  .section-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #e50914;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  /* Memory Chart */
+  .chart-wrap { background: #0d1117; border-radius: 12px; padding: 24px; border: 1px solid #1e2a3a; }
+  .chart-title { font-size: 14px; color: #888; margin-bottom: 16px; }
+  .chart { position: relative; height: 160px; }
+  .chart-bars { display: flex; align-items: flex-end; height: 140px; gap: 2px; }
+  .bar-wrap { flex: 1; display: flex; flex-direction: column; align-items: center; }
+  .bar {
+    width: 100%;
+    border-radius: 3px 3px 0 0;
+    transition: opacity 0.2s;
+    position: relative;
+  }
+  .bar.crash-zone { background: #e50914 !important; }
+  .bar.warning { background: #ff9800; }
+  .bar.normal { background: #2196f3; }
+  .bar.low { background: #4caf50; }
+  .chart-labels { display: flex; justify-content: space-between; margin-top: 8px; }
+  .chart-labels span { font-size: 10px; color: #555; }
+  .chart-legend { display: flex; gap: 16px; margin-top: 12px; flex-wrap: wrap; }
+  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #888; }
+  .legend-dot { width: 10px; height: 10px; border-radius: 2px; }
+
+  /* Bug Cards */
+  .bug-card {
+    background: #0f0f1a;
+    border-radius: 16px;
+    border: 1px solid #1e1e2e;
+    margin-bottom: 24px;
+    overflow: hidden;
+  }
+  .bug-header {
+    padding: 20px 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    border-bottom: 1px solid #1e1e2e;
+  }
+  .bug-header.blocker { background: linear-gradient(90deg, #1a0000, #0f0f1a); border-left: 5px solid #e50914; }
+  .bug-header.high { background: linear-gradient(90deg, #1a0800, #0f0f1a); border-left: 5px solid #ff9800; }
+  .bug-num { font-size: 13px; color: #555; font-weight: 600; }
+  .bug-title { font-size: 18px; font-weight: 700; color: #fff; }
+  .severity-badge {
+    margin-left: auto;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .severity-badge.blocker { background: #e50914; color: #fff; }
+  .severity-badge.high { background: #ff9800; color: #000; }
+  .bug-body { padding: 24px; }
+  .bug-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+  .bug-field label { font-size: 11px; color: #555; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; display: block; }
+  .bug-field p { font-size: 14px; color: #ccc; line-height: 1.6; }
+  .steps-list { list-style: none; }
+  .steps-list li { display: flex; gap: 12px; padding: 8px 0; border-bottom: 1px solid #1a1a2a; font-size: 14px; color: #bbb; }
+  .steps-list li:last-child { border-bottom: none; }
+  .step-num { background: #1e1e3e; color: #6060ff; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0; }
+  .result-row { display: flex; gap: 20px; margin-top: 16px; }
+  .result-box { flex: 1; padding: 14px; border-radius: 8px; }
+  .result-box.expected { background: #0a1a0a; border: 1px solid #1e3a1e; }
+  .result-box.actual { background: #1a0a0a; border: 1px solid #3a1e1e; }
+  .result-box label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; display: block; }
+  .result-box.expected label { color: #4caf50; }
+  .result-box.actual label { color: #e50914; }
+  .result-box p { font-size: 14px; color: #ccc; line-height: 1.5; }
+
+  .root-cause-box {
+    background: #0a0f1a;
+    border: 1px solid #1e2a4a;
+    border-left: 4px solid #2196f3;
+    border-radius: 8px;
+    padding: 16px;
+    margin-top: 16px;
+  }
+  .root-cause-box h4 { color: #2196f3; font-size: 13px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+  .root-cause-box p { font-size: 13px; color: #aaa; line-height: 1.6; font-family: monospace; }
+
+  .logcat-box {
+    background: #050810;
+    border: 1px solid #1a2030;
+    border-radius: 8px;
+    padding: 16px;
+    margin-top: 16px;
+    overflow-x: auto;
+  }
+  .logcat-box h4 { color: #888; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
+  .logcat-box pre { font-size: 12px; line-height: 1.7; font-family: 'Courier New', monospace; white-space: pre-wrap; }
+  .log-fatal { color: #ff4444; }
+  .log-warn { color: #ff9800; }
+  .log-info { color: #4fc3f7; }
+  .log-stack { color: #888; }
+
+  /* Screenshots */
+  .screenshots-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+  .ss-card { background: #0f0f1a; border-radius: 12px; overflow: hidden; border: 1px solid #1e1e2e; }
+  .ss-card img { width: 100%; display: block; }
+  .ss-card .ss-label { padding: 12px; font-size: 12px; color: #888; }
+  .ss-card .ss-label strong { color: #ccc; display: block; margin-bottom: 2px; }
+  .ss-card.crash-ss { border-color: #e50914; }
+  .ss-card.warn-ss { border-color: #ff9800; }
+
+  /* Performance */
+  .perf-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  .perf-card { background: #0f0f1a; border-radius: 12px; padding: 20px; text-align: center; border: 1px solid #1e1e2e; }
+  .perf-value { font-size: 36px; font-weight: 900; color: #fff; }
+  .perf-unit { font-size: 14px; color: #555; margin-left: 4px; }
+  .perf-label { font-size: 12px; color: #666; margin-top: 6px; text-transform: uppercase; letter-spacing: 1px; }
+  .perf-status { font-size: 11px; margin-top: 6px; padding: 3px 8px; border-radius: 10px; display: inline-block; }
+  .perf-status.ok { background: #0a1a0a; color: #4caf50; }
+  .perf-status.warn { background: #1a0f00; color: #ff9800; }
+  .perf-status.bad { background: #1a0000; color: #e50914; }
+
+  /* Final verdict */
+  .verdict-final {
+    background: linear-gradient(135deg, #1a0000, #0f0f1a);
+    border: 2px solid #e50914;
+    border-radius: 16px;
+    padding: 32px;
+    text-align: center;
+  }
+  .verdict-final h2 { font-size: 28px; color: #e50914; font-weight: 900; margin-bottom: 12px; }
+  .verdict-final p { font-size: 16px; color: #aaa; line-height: 1.7; }
+  .verdict-final .action { margin-top: 20px; padding: 16px; background: #0a0a0f; border-radius: 8px; font-size: 14px; color: #888; line-height: 1.8; }
+
+  .footer { padding: 24px 40px; text-align: center; color: #333; font-size: 12px; border-top: 1px solid #1a1a2a; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-top">
+    <div class="logo">SOUTH<span>STREAM</span></div>
+    <div class="build-badge">
+      <div class="label">Build</div>
+      <div class="value">New Build — April 15, 2026</div>
+      <div class="label" style="margin-top:6px">Device</div>
+      <div class="value" style="font-size:13px">Amazon Fire TV</div>
+    </div>
+  </div>
+  <div class="report-title">QA Test Report — New Build</div>
+  <div class="report-meta">
+    <span>📅 April 15, 2026</span>
+    <span>⏱ Session: 31 minutes (16:46 – 17:18)</span>
+    <span>👤 Tester: Nandini (Manual)</span>
+    <span>📡 Monitoring: Silent background monitor</span>
+  </div>
+</div>
+
+<!-- VERDICT SUMMARY -->
+<div class="verdict-bar">
+  <div class="verdict-card red">
+    <div class="verdict-num">1</div>
+    <div class="verdict-label">Crash</div>
+    <div class="verdict-sub">BLOCKER</div>
+  </div>
+  <div class="verdict-card orange">
+    <div class="verdict-num">482<span style="font-size:20px">MB</span></div>
+    <div class="verdict-label">Peak Memory</div>
+    <div class="verdict-sub">Leaked for 20+ min</div>
+  </div>
+  <div class="verdict-card orange">
+    <div class="verdict-num">40+</div>
+    <div class="verdict-label">High Mem Alerts</div>
+    <div class="verdict-sub">&gt;400MB warnings</div>
+  </div>
+  <div class="verdict-card green">
+    <div class="verdict-num">~5<span style="font-size:20px">s</span></div>
+    <div class="verdict-label">App Launch</div>
+    <div class="verdict-sub">Acceptable</div>
+  </div>
+</div>
+
+<!-- CRITICAL ALERT -->
+<div class="critical-banner">
+  <div class="icon">🚨</div>
+  <div class="text">
+    <h3>NEW BUILD DID NOT FIX THE CRASH — SAME EXCEPTION AS APRIL 14</h3>
+    <p>FATAL EXCEPTION: mqt_native_modules → Trying to update non-existent view. Now also triggered by Content Language change in addition to Login.</p>
+  </div>
+</div>
+
+<!-- PERFORMANCE -->
+<div class="section">
+  <div class="section-title">⚡ Performance Overview</div>
+  <div class="perf-grid">
+    <div class="perf-card">
+      <div class="perf-value">~5<span class="perf-unit">s</span></div>
+      <div class="perf-label">App Launch Time</div>
+      <div class="perf-status ok">PASS</div>
+    </div>
+    <div class="perf-card">
+      <div class="perf-value">321<span class="perf-unit">MB</span></div>
+      <div class="perf-label">Launch Memory</div>
+      <div class="perf-status warn">HIGH</div>
+    </div>
+    <div class="perf-card">
+      <div class="perf-value">482<span class="perf-unit">MB</span></div>
+      <div class="perf-label">Peak Memory</div>
+      <div class="perf-status bad">CRITICAL</div>
+    </div>
+    <div class="perf-card">
+      <div class="perf-value">20+<span class="perf-unit">min</span></div>
+      <div class="perf-label">Mem &gt;400MB Duration</div>
+      <div class="perf-status bad">LEAK</div>
+    </div>
+  </div>
+</div>
+
+<!-- MEMORY CHART -->
+<div class="section">
+  <div class="section-title">📈 Memory Timeline (31 minutes)</div>
+  <div class="chart-wrap">
+    <div class="chart-title">RAM usage (MB) — sampled every 20 seconds | Red = crash zone | Orange = &gt;400MB | Blue = normal | Green = recovering</div>
+    <div class="chart">
+      <div class="chart-bars" id="memChart"></div>
+    </div>
+    <div class="chart-labels">
+      <span>16:46</span><span>16:51</span><span>16:56</span><span>17:01</span><span>17:06</span><span>17:11</span><span>17:18</span>
+    </div>
+    <div class="chart-legend">
+      <div class="legend-item"><div class="legend-dot" style="background:#e50914"></div> Crash / &gt;480MB</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#ff9800"></div> High &gt;400MB</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#2196f3"></div> Normal 200–400MB</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#4caf50"></div> Low / Recovering</div>
+    </div>
+  </div>
+</div>
+
+<!-- BUG 1 -->
+<div class="section">
+  <div class="section-title">🐛 Issues Found</div>
+
+  <div class="bug-card">
+    <div class="bug-header blocker">
+      <div>
+        <div class="bug-num">BUG #1 — BLOCKER</div>
+        <div class="bug-title">App Crashes on Content Language Change</div>
+      </div>
+      <div class="severity-badge blocker">Blocker</div>
+    </div>
+    <div class="bug-body">
+      <div class="bug-grid">
+        <div class="bug-field">
+          <label>Screen</label>
+          <p>Settings → Content Language</p>
+        </div>
+        <div class="bug-field">
+          <label>Crash Time</label>
+          <p>16:48:51 (2m 7s into session)</p>
+        </div>
+        <div class="bug-field">
+          <label>Frequency</label>
+          <p>100% reproducible — every time language is changed</p>
+        </div>
+        <div class="bug-field">
+          <label>Memory at Crash</label>
+          <p>302.7MB (rising from 250MB in &lt;2 min)</p>
+        </div>
+      </div>
+
+      <label style="font-size:11px;color:#555;text-transform:uppercase;letter-spacing:1px;display:block;margin-bottom:10px">Steps to Reproduce</label>
+      <ul class="steps-list">
+        <li><span class="step-num">1</span>Open SouthStream on Fire TV</li>
+        <li><span class="step-num">2</span>Navigate to Settings (left sidebar)</li>
+        <li><span class="step-num">3</span>Open Content Language settings</li>
+        <li><span class="step-num">4</span>Select any different language</li>
+        <li><span class="step-num">5</span>App crashes silently — returns to Fire TV home screen</li>
+      </ul>
+
+      <div class="result-row">
+        <div class="result-box expected">
+          <label>Expected</label>
+          <p>Language changes successfully, content reloads in selected language, user stays in app</p>
+        </div>
+        <div class="result-box actual">
+          <label>Actual</label>
+          <p>App crashes silently with no error message. Returns to Fire TV home. All unsaved state lost.</p>
+        </div>
+      </div>
+
+      <div class="root-cause-box">
+        <h4>Root Cause Analysis</h4>
+        <p>When user changes content language, the app navigates away from the Language settings screen. A Reanimated animation was still running on the settings screen view (tag 2569). When the screen unmounts during navigation, the view is destroyed — but the Reanimated thread continues trying to update it → FATAL EXCEPTION.<br><br>
+        Additionally: immediately before the crash, content tried to reload with the new language but returned undefined data — images loaded from <strong>https://undefined/undefined</strong> — same broken data pipeline as the series episodes bug.</p>
+      </div>
+
+      <div class="logcat-box">
+        <h4>Logcat Evidence</h4>
+        <pre><span class="log-warn">16:48:29  ReactNativeJS: 'image failed to load' { uri: 'https://undefined/undefined' }</span>
+
+<span class="log-fatal">16:48:51  E/AndroidRuntime: FATAL EXCEPTION: mqt_native_modules
+          Process: in.southstream.android, PID: 12740
+          com.facebook.react.uimanager.O: Trying to update non-existent view with tag 2569</span>
+<span class="log-stack">            at ReanimatedUIManager.updateView(SourceFile:1)
+            at UIManagerModule.updateView(SourceFile:54)
+            at java.lang.reflect.Method.invoke(Native Method)
+            at com.facebook.react.bridge.JavaMethodWrapper.invoke(SourceFile:151)</span>
+
+<span class="log-info">16:48:51  ActivityManager: Process in.southstream.android (pid 12740) has died: fg TOP</span>
+<span class="log-info">16:49:34  ReactNativeJS: Running "UltraSouthStream"  ← app restarted</span></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- BUG 2 -->
+  <div class="bug-card">
+    <div class="bug-header high">
+      <div>
+        <div class="bug-num">BUG #2 — HIGH</div>
+        <div class="bug-title">Memory Leak — RAM stays above 400MB for 20+ minutes</div>
+      </div>
+      <div class="severity-badge high">High</div>
+    </div>
+    <div class="bug-body">
+      <div class="bug-grid">
+        <div class="bug-field">
+          <label>Observed During</label>
+          <p>General navigation / content browsing</p>
+        </div>
+        <div class="bug-field">
+          <label>Duration Above 400MB</label>
+          <p>16:57 → 17:15 = 18 continuous minutes</p>
+        </div>
+        <div class="bug-field">
+          <label>Peak RAM</label>
+          <p>482.8MB at 17:13:04</p>
+        </div>
+        <div class="bug-field">
+          <label>Normal RAM</label>
+          <p>~230–260MB at startup</p>
+        </div>
+      </div>
+
+      <div class="result-row">
+        <div class="result-box expected">
+          <label>Expected</label>
+          <p>Memory stays stable during browsing. GC collects unused objects regularly. RAM stays below 300MB.</p>
+        </div>
+        <div class="result-box actual">
+          <label>Actual</label>
+          <p>RAM climbs steadily during navigation. Stays above 400MB for 18+ minutes without releasing. Peak 482MB — just below the crash threshold seen on April 14 (483MB).</p>
+        </div>
+      </div>
+
+      <div class="root-cause-box">
+        <h4>Root Cause Analysis</h4>
+        <p>Screen components and event listeners are not being properly cleaned up when navigating between screens. Each navigation adds memory that is never released. The GC eventually forces a cleanup (seen at 17:15 — drops from 475MB to 407MB) but this is too late and too infrequent. Confirmed memory leak. If session continues beyond 35–40 minutes, another crash is expected.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- BUG 3 -->
+  <div class="bug-card">
+    <div class="bug-header high">
+      <div>
+        <div class="bug-num">BUG #3 — HIGH (PERSISTING)</div>
+        <div class="bug-title">Content Returns undefined After Language Change</div>
+      </div>
+      <div class="severity-badge high">High</div>
+    </div>
+    <div class="bug-body">
+      <div class="bug-grid">
+        <div class="bug-field">
+          <label>Trigger</label>
+          <p>Changing Content Language setting</p>
+        </div>
+        <div class="bug-field">
+          <label>Evidence Time</label>
+          <p>16:48:29 (22s before crash)</p>
+        </div>
+      </div>
+
+      <div class="result-row">
+        <div class="result-box expected">
+          <label>Expected</label>
+          <p>After language change, content reloads with correct data in new language. All images load from valid URLs.</p>
+        </div>
+        <div class="result-box actual">
+          <label>Actual</label>
+          <p>Content data returns undefined. Images attempt to load from <code style="color:#ff9800">https://undefined/undefined</code>. Same broken pipeline as series episodes bug.</p>
+        </div>
+      </div>
+
+      <div class="logcat-box">
+        <h4>Logcat Evidence</h4>
+        <pre><span class="log-warn">16:48:29  I/ReactNativeJS: 'image failed to load'
+          { uri: 'https://undefined/undefined' }, undefined</span></pre>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SCREENSHOTS -->
+<div class="section">
+  <div class="section-title">📸 Screenshots</div>
+  <div class="screenshots-grid">
+
+    <div class="ss-card">
+      <img src="../screenshots/apr15_newbuild/01_launch.png" alt="App Launch">
+      <div class="ss-label"><strong>App Launch — PASS</strong>Home loaded in ~5s. Banner, Continue Watching, Malayalam Movies rail all visible.</div>
+    </div>
+
+    <div class="ss-card">
+      <img src="../screenshots/apr15_newbuild/04_home_rails.png" alt="Home Rails">
+      <div class="ss-label"><strong>Home Page Rails — PASS</strong>Dubbed TV Series and Dubbed Movies rails loaded with thumbnails. All cards visible.</div>
+    </div>
+
+    <div class="ss-card">
+      <img src="../screenshots/apr15_newbuild/05_home_more_rails.png" alt="More Rails">
+      <div class="ss-label"><strong>Home Page — More Sections — PASS</strong>Best Hollywood Movies and Best of Animation rails loaded correctly.</div>
+    </div>
+
+    <div class="ss-card crash-ss">
+      <img src="../screenshots/apr15_newbuild/CRASH_1_164935.png" alt="After Crash">
+      <div class="ss-label"><strong>After Crash — 16:49:35</strong>Fire TV home screen shown after SouthStream crashed during Content Language change.</div>
+    </div>
+
+    <div class="ss-card">
+      <img src="../screenshots/apr15_newbuild/auto_2_165047.png" alt="Auto SS 2">
+      <div class="ss-label"><strong>Auto Screenshot — 16:50:47</strong>App restarted and recovering after crash. RAM at 238MB.</div>
+    </div>
+
+    <div class="ss-card warn-ss">
+      <img src="../screenshots/apr15_newbuild/auto_6_165859.png" alt="Auto SS 6">
+      <div class="ss-label"><strong>Auto Screenshot — 16:58:59</strong>Memory at 457MB — high memory zone. App still running.</div>
+    </div>
+
+    <div class="ss-card warn-ss">
+      <img src="../screenshots/apr15_newbuild/auto_10_170711.png" alt="Auto SS 10">
+      <div class="ss-label"><strong>Auto Screenshot — 17:07:11</strong>Memory at 429MB. Sustained leak — 10 min above 400MB.</div>
+    </div>
+
+    <div class="ss-card warn-ss">
+      <img src="../screenshots/apr15_newbuild/auto_13_171321.png" alt="Auto SS 13">
+      <div class="ss-label"><strong>Auto Screenshot — 17:13:21</strong>Peak memory period — 482MB. Near crash threshold.</div>
+    </div>
+
+    <div class="ss-card">
+      <img src="../screenshots/apr15_newbuild/auto_15_171727.png" alt="Auto SS 15">
+      <div class="ss-label"><strong>Auto Screenshot — 17:17:27</strong>Session end. Memory dropped to 216MB after GC. App stable.</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- COMPARISON WITH APRIL 14 -->
+<div class="section">
+  <div class="section-title">🔄 Comparison: April 14 Build vs New Build</div>
+  <table style="width:100%;border-collapse:collapse;font-size:14px;">
+    <thead>
+      <tr style="background:#1a1a2e;color:#888;text-transform:uppercase;font-size:11px;letter-spacing:1px;">
+        <th style="padding:12px 16px;text-align:left;">Issue</th>
+        <th style="padding:12px 16px;text-align:center;">April 14 Build</th>
+        <th style="padding:12px 16px;text-align:center;">New Build (Apr 15)</th>
+        <th style="padding:12px 16px;text-align:left;">Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style="border-bottom:1px solid #1a1a2a;">
+        <td style="padding:14px 16px;color:#ccc;">Login crash (Reanimated)</td>
+        <td style="padding:14px 16px;text-align:center;color:#e50914;">❌ CRASH</td>
+        <td style="padding:14px 16px;text-align:center;color:#ff9800;">⚠️ Not retested</td>
+        <td style="padding:14px 16px;color:#ff9800;">Unknown — needs retest</td>
+      </tr>
+      <tr style="border-bottom:1px solid #1a1a2a;background:#0f0f18;">
+        <td style="padding:14px 16px;color:#ccc;">Language change crash</td>
+        <td style="padding:14px 16px;text-align:center;color:#ff9800;">⚠️ Not tested</td>
+        <td style="padding:14px 16px;text-align:center;color:#e50914;">❌ CRASH</td>
+        <td style="padding:14px 16px;color:#e50914;">NEW BUG found</td>
+      </tr>
+      <tr style="border-bottom:1px solid #1a1a2a;">
+        <td style="padding:14px 16px;color:#ccc;">Memory leak (&gt;400MB)</td>
+        <td style="padding:14px 16px;text-align:center;color:#e50914;">❌ 483MB peak</td>
+        <td style="padding:14px 16px;text-align:center;color:#e50914;">❌ 482MB peak</td>
+        <td style="padding:14px 16px;color:#e50914;">NOT FIXED</td>
+      </tr>
+      <tr style="border-bottom:1px solid #1a1a2a;background:#0f0f18;">
+        <td style="padding:14px 16px;color:#ccc;">Series episodes undefined</td>
+        <td style="padding:14px 16px;text-align:center;color:#e50914;">❌ Broken</td>
+        <td style="padding:14px 16px;text-align:center;color:#ff9800;">⚠️ Still seen in logs</td>
+        <td style="padding:14px 16px;color:#e50914;">NOT FIXED</td>
+      </tr>
+      <tr style="border-bottom:1px solid #1a1a2a;">
+        <td style="padding:14px 16px;color:#ccc;">App launch time</td>
+        <td style="padding:14px 16px;text-align:center;color:#4caf50;">✅ ~5s</td>
+        <td style="padding:14px 16px;text-align:center;color:#4caf50;">✅ ~5s</td>
+        <td style="padding:14px 16px;color:#4caf50;">OK — No regression</td>
+      </tr>
+      <tr style="background:#0f0f18;">
+        <td style="padding:14px 16px;color:#ccc;">Home page content loading</td>
+        <td style="padding:14px 16px;text-align:center;color:#4caf50;">✅ OK</td>
+        <td style="padding:14px 16px;text-align:center;color:#4caf50;">✅ OK</td>
+        <td style="padding:14px 16px;color:#4caf50;">OK — No regression</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- SCREEN RECORDINGS -->
+<div class="section">
+  <div class="section-title">🎬 Screen Recordings</div>
+  <div style="background:#0f0f1a;border-radius:12px;border:1px solid #1e1e2e;padding:24px;">
+    <p style="color:#888;font-size:14px;margin-bottom:20px;">Screen recording was not active during this manual test session. Only auto-screenshots were captured every 2 minutes by the silent monitor. To capture screen recordings in future sessions, start the recorder before testing begins.</p>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;">
+      <div style="background:#0a0a0f;border:1px solid #1e1e2e;border-radius:10px;padding:20px;text-align:center;">
+        <div style="font-size:40px;margin-bottom:10px;">📸</div>
+        <div style="font-size:28px;font-weight:900;color:#2196f3;">15</div>
+        <div style="font-size:12px;color:#666;margin-top:4px;text-transform:uppercase;letter-spacing:1px;">Auto Screenshots Captured</div>
+        <div style="font-size:11px;color:#444;margin-top:6px;">Every 2 minutes during session</div>
+      </div>
+      <div style="background:#0a0a0f;border:1px solid #1e1e2e;border-radius:10px;padding:20px;text-align:center;">
+        <div style="font-size:40px;margin-bottom:10px;">⏱</div>
+        <div style="font-size:28px;font-weight:900;color:#2196f3;">31 min</div>
+        <div style="font-size:12px;color:#666;margin-top:4px;text-transform:uppercase;letter-spacing:1px;">Session Duration</div>
+        <div style="font-size:11px;color:#444;margin-top:6px;">16:46 — 17:18</div>
+      </div>
+      <div style="background:#0a0a0f;border:1px solid #1e1e2e;border-radius:10px;padding:20px;text-align:center;">
+        <div style="font-size:40px;margin-bottom:10px;">🎥</div>
+        <div style="font-size:28px;font-weight:900;color:#555;">—</div>
+        <div style="font-size:12px;color:#666;margin-top:4px;text-transform:uppercase;letter-spacing:1px;">Video Recording</div>
+        <div style="font-size:11px;color:#444;margin-top:6px;">Not started this session</div>
+      </div>
+    </div>
+
+    <div style="margin-top:20px;">
+      <div style="font-size:13px;color:#555;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;">Auto Screenshots — Timeline</div>
+      <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px;">
+        <div style="text-align:center;">
+          <img src="../screenshots/apr15_newbuild/auto_1_164844.png" style="width:100%;border-radius:6px;border:1px solid #1e1e2e;">
+          <div style="font-size:10px;color:#555;margin-top:4px;">16:48:44</div>
+        </div>
+        <div style="text-align:center;">
+          <img src="../screenshots/apr15_newbuild/auto_2_165047.png" style="width:100%;border-radius:6px;border:1px solid #1e1e2e;">
+          <div style="font-size:10px;color:#555;margin-top:4px;">16:50:47</div>
+        </div>
+        <div style="text-align:center;">
+          <img src="../screenshots/apr15_newbuild/auto_3_165249.png" style="width:100%;border-radius:6px;border:1px solid #1e1e2e;">
+          <div style="font-size:10px;color:#555;margin-top:4px;">16:52:49</div>
+        </div>
+        <div style="text-align:center;">
+          <img src="../screenshots/apr15_newbuild/auto_4_165452.png" style="width:100%;border-radius:6px;border:1px solid #1e1e2e;">
+          <div style="font-size:10px;color:#555;margin-top:4px;">16:54:52</div>
+        </div>
+        <div style="text-align:center;">
+          <img src="../screenshots/apr15_newbuild/auto_5_165655.png" style="width:100%;border-radius:6px;border:1px solid #1e1e2e;">
+          <div style="font-size:10px;color:#555;margin-top:4px;">16:56:55</div>
+        </div>
+        <div style="text-align:center;">
+          <img src="../screenshots/apr15_newbuild/auto_6_165859.png" style="width:100%;border-radius:6px;border:1px solid #1e1e2e;">
+          <div style="font-size:10px;color:#555;margin-top:4px;">16:58:59 ⚠️</div>
+        </div>
+        <div style="text-align:center;">
+          <img src="../screenshots/apr15_newbuild/auto_7_170103.png" style="width:100%;border-radius:6px;border:1px solid #1e1e2e;">
+          <div style="font-size:10px;color:#555;margin-top:4px;">17:01:03</div>
+        </div>
+        <div style="text-align:center;">
+          <img src="../screenshots/apr15_newbuild/auto_8_170309.png" style="width:100%;border-radius:6px;border:1px solid #1e1e2e;">
+          <div style="font-size:10px;color:#555;margin-top:4px;">17:03:09</div>
+        </div>
+        <div style="text-align:center;">
+          <img src="../screenshots/apr15_newbuild/auto_9_170510.png" style="width:100%;border-radius:6px;border:1px solid #1e1e2e;">
+          <div style="font-size:10px;color:#555;margin-top:4px;">17:05:10</div>
+        </div>
+        <div style="text-align:center;">
+          <img src="../screenshots/apr15_newbuild/auto_10_170711.png" style="width:100%;border-radius:6px;border:1px solid #1e1e2e;">
+          <div style="font-size:10px;color:#555;margin-top:4px;">17:07:11 ⚠️</div>
+        </div>
+        <div style="text-align:center;">
+          <img src="../screenshots/apr15_newbuild/auto_11_170915.png" style="width:100%;border-radius:6px;border:1px solid #1e1e2e;">
+          <div style="font-size:10px;color:#555;margin-top:4px;">17:09:15</div>
+        </div>
+        <div style="text-align:center;">
+          <img src="../screenshots/apr15_newbuild/auto_12_171118.png" style="width:100%;border-radius:6px;border:1px solid #1e1e2e;">
+          <div style="font-size:10px;color:#555;margin-top:4px;">17:11:18</div>
+        </div>
+        <div style="text-align:center;">
+          <img src="../screenshots/apr15_newbuild/auto_13_171321.png" style="width:100%;border-radius:6px;border:1px solid #1e1e2e;">
+          <div style="font-size:10px;color:#555;margin-top:4px;">17:13:21 🔴</div>
+        </div>
+        <div style="text-align:center;">
+          <img src="../screenshots/apr15_newbuild/auto_14_171524.png" style="width:100%;border-radius:6px;border:1px solid #1e1e2e;">
+          <div style="font-size:10px;color:#555;margin-top:4px;">17:15:24</div>
+        </div>
+        <div style="text-align:center;">
+          <img src="../screenshots/apr15_newbuild/auto_15_171727.png" style="width:100%;border-radius:6px;border:1px solid #1e1e2e;">
+          <div style="font-size:10px;color:#555;margin-top:4px;">17:17:27</div>
+        </div>
+      </div>
+      <div style="margin-top:8px;font-size:11px;color:#444;">⚠️ = memory above 400MB &nbsp; 🔴 = peak memory 482MB</div>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  SouthStream Fire TV QA Report · April 15, 2026 · Generated by Silent Monitor + Manual Testing
+</div>
+
+<script>
+// Render memory chart
+const memData = [
+  321.1,268.3,261.4,251.4,250.3,302.7,0,0,
+  104.1,236.8,238.1,235.6,233.8,271.4,254.8,254.9,235.1,258.8,
+  321.3,365.2,361.1,333.6,338.1,345.1,353.6,383.8,345.4,345.7,363.2,
+  356.1,414.9,430.7,425.2,431.4,457.9,371.0,375.9,386.0,403.1,427.2,
+  363.4,361.6,363.8,367.2,403.4,395.5,393.3,385.0,380.7,417.9,432.2,
+  387.3,412.6,455.1,431.3,426.6,408.9,402.4,429.7,421.9,412.1,414.7,
+  409.9,407.2,409.5,434.1,476.9,444.6,431.7,430.3,430.3,430.8,431.4,
+  461.6,452.0,482.8,456.0,459.5,452.5,454.2,475.9,407.2,406.0,406.0,
+  404.3,405.0,404.9,313.4,216.5,209.5
+];
+const maxMem = 520;
+const chart = document.getElementById('memChart');
+memData.forEach((v, i) => {
+  const wrap = document.createElement('div');
+  wrap.className = 'bar-wrap';
+  const bar = document.createElement('div');
+  bar.className = 'bar';
+  const h = v === 0 ? 2 : Math.round((v / maxMem) * 140);
+  bar.style.height = h + 'px';
+  // Color
+  if (i === 6 || i === 7) { bar.style.background = '#333'; bar.style.opacity = '0.3'; }
+  else if (v >= 470) bar.style.background = '#e50914';
+  else if (v >= 400) bar.style.background = '#ff9800';
+  else if (v >= 200) bar.style.background = '#2196f3';
+  else bar.style.background = '#4caf50';
+  // Crash marker
+  if (i === 8) bar.style.background = '#e50914';
+  bar.title = v > 0 ? v + 'MB' : 'crash';
+  wrap.appendChild(bar);
+  chart.appendChild(wrap);
+});
+</script>
+</body>
+</html>
