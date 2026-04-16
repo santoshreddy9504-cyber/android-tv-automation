@@ -1,0 +1,23 @@
+# Next-Level QA Intelligence Platform — Requirements
+# Install: pip install -r requirements_next_level.txt
+
+# ── Core (already installed) ─────────────────────────────────────────
+rich>=10.0.0,<13.0.0        # CLI dashboard
+flask>=2.0.0,<3.0.0         # Web dashboard
+
+# ── AI Engine ────────────────────────────────────────────────────────
+anthropic>=0.25.0            # Claude API — crash analysis AI brain
+                             # Get API key: https://console.anthropic.com
+
+# ── Computer Vision ──────────────────────────────────────────────────
+Pillow>=9.0.0                # Image analysis — black screen, frozen frame detection
+
+# ── No extra deps needed for: ────────────────────────────────────────
+# Crash predictor  — pure Python math (no ML library)
+# Multi-device     — subprocess ADB calls only
+# Chaos engineer   — subprocess ADB calls only
+# Notification     — stdlib smtplib + urllib
+# Bug reporter     — stdlib only
+# Release gate     — stdlib json only
+# Self-healing     — subprocess ADB calls only
+# Live dashboard   — stdlib http.server + SSE (no websocket needed)

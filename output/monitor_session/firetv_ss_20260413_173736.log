@@ -1,0 +1,214 @@
+=====================================================
+SILENT MONITOR — SouthStream on Fire TV
+Started : Mon Apr 13 17:37:36 IST 2026
+Device  : 192.168.2.8:5555 (Fire TV)
+=====================================================
+[17:37:36] 👁      mResumedActivity: ActivityRecord{c10e9be u0 com.amazon.tv.launcher/.ui.HomeActivity_vNext t3}
+[17:37:36] 📸 Screenshot #1: firetv_ss_20260413_173736_17_37_36_ss1.png
+[17:37:36] 📊 MEM:  kB
+[17:37:36] 🎬 
+[17:38:10] 👁      mResumedActivity: ActivityRecord{e7b591 u0 com.amazon.tv.settings.v2/.tv.applications.ApplicationsActivity t3}
+[17:38:10] 📸 Screenshot #2: firetv_ss_20260413_173736_17_38_10_ss2.png
+[17:38:10] 📊 MEM:  kB
+[17:38:10] 🎬 
+[17:38:42] 👁      mResumedActivity: ActivityRecord{5c0a366 u0 in.southstream.android/.MainActivity t336}
+[17:38:42] 📸 Screenshot #3: firetv_ss_20260413_173736_17_38_42_ss3.png
+[17:38:42] 📊 MEM: 281510 kB
+[17:38:42] 🎬 Janky frames: 117 (30.31%)
+[17:39:16] 👁      mResumedActivity: ActivityRecord{5c0a366 u0 in.southstream.android/.MainActivity t336}
+[17:39:16] 📸 Screenshot #4: firetv_ss_20260413_173736_17_39_16_ss4.png
+[17:39:16] 📊 MEM: 251355 kB
+[17:39:16] 🎬 Janky frames: 317 (30.33%)
+[17:39:48] 👁      mResumedActivity: ActivityRecord{5c0a366 u0 in.southstream.android/.MainActivity t336}
+[17:39:48] 📸 Screenshot #5: firetv_ss_20260413_173736_17_39_48_ss5.png
+[17:39:48] 📊 MEM: 257680 kB
+[17:39:48] 🎬 Janky frames: 345 (18.06%)
+[17:40:21] 👁      mResumedActivity: ActivityRecord{5c0a366 u0 in.southstream.android/.MainActivity t336}
+[17:40:21] 📸 Screenshot #6: firetv_ss_20260413_173736_17_40_21_ss6.png
+[17:40:21] 📊 MEM: 328469 kB
+[17:40:21] 🎬 Janky frames: 513 (16.33%)
+[17:40:21] 📹 Seg1 pulled — starting Seg2
+[17:40:56] 👁      mResumedActivity: ActivityRecord{5c0a366 u0 in.southstream.android/.MainActivity t336}
+[17:40:56] 📸 Screenshot #7: firetv_ss_20260413_173736_17_40_56_ss7.png
+[17:40:56] 📊 MEM: 340207 kB
+[17:40:56] 🎬 Janky frames: 714 (16.83%)
+[17:41:31] 👁      mResumedActivity: ActivityRecord{5c0a366 u0 in.southstream.android/.MainActivity t336}
+[17:41:31] 📸 Screenshot #8: firetv_ss_20260413_173736_17_41_31_ss8.png
+[17:41:31] 📊 MEM: 301798 kB
+[17:41:31] 🎬 Janky frames: 985 (19.12%)
+[17:42:06] 👁      mResumedActivity: ActivityRecord{5c0a366 u0 in.southstream.android/.MainActivity t336}
+[17:42:06] 📸 Screenshot #9: firetv_ss_20260413_173736_17_42_06_ss9.png
+[17:42:06] 📊 MEM: 294013 kB
+[17:42:06] 🎬 Janky frames: 1132 (19.67%)
+[17:42:40] 👁      mResumedActivity: ActivityRecord{5c0a366 u0 in.southstream.android/.MainActivity t336}
+[17:42:40] 📸 Screenshot #10: firetv_ss_20260413_173736_17_42_40_ss10.png
+[17:42:40] 📊 MEM: 233998 kB
+[17:42:40] 🎬 Janky frames: 1210 (20.26%)
+[17:43:12] 👁      mResumedActivity: ActivityRecord{5c0a366 u0 in.southstream.android/.MainActivity t336}
+[17:43:12] 📸 Screenshot #11: firetv_ss_20260413_173736_17_43_12_ss11.png
+[17:43:12] 📊 MEM: 242786 kB
+[17:43:12] 🎬 Janky frames: 1586 (24.23%)
+[17:43:12] 📹 Seg2 pulled — starting Seg3
+[17:43:47] 👁      mResumedActivity: ActivityRecord{5c0a366 u0 in.southstream.android/.MainActivity t336}
+[17:43:47] 📸 Screenshot #12: firetv_ss_20260413_173736_17_43_47_ss12.png
+[17:43:47] 📊 MEM: 310752 kB
+[17:43:47] 🎬 Janky frames: 1799 (22.03%)
+[17:44:24] 👁      mResumedActivity: ActivityRecord{5c0a366 u0 in.southstream.android/.MainActivity t336}
+[17:44:24] 📸 Screenshot #13: firetv_ss_20260413_173736_17_44_24_ss13.png
+[17:44:24] 📊 MEM: 314540 kB
+[17:44:24] 🎬 Janky frames: 1985 (21.95%)
+[17:44:59] 👁      mResumedActivity: ActivityRecord{5c0a366 u0 in.southstream.android/.MainActivity t336}
+[17:44:59] 📸 Screenshot #14: firetv_ss_20260413_173736_17_44_59_ss14.png
+[17:44:59] 📊 MEM: 353412 kB
+[17:44:59] 🎬 Janky frames: 2502 (24.02%)
+[17:45:39] 👁      mResumedActivity: ActivityRecord{5c0a366 u0 in.southstream.android/.MainActivity t336}
+[17:45:39] 📸 Screenshot #15: firetv_ss_20260413_173736_17_45_39_ss15.png
+[17:45:39] 📊 MEM: 354255 kB
+[17:45:39] 🎬 Janky frames: 2512 (23.53%)
+[17:46:12] 👁      mResumedActivity: ActivityRecord{5c0a366 u0 in.southstream.android/.MainActivity t336}
+[17:46:12] 📸 Screenshot #16: firetv_ss_20260413_173736_17_46_12_ss16.png
+[17:46:12] 📊 MEM: 376300 kB
+[17:46:12] 🎬 Janky frames: 2529 (23.55%)
+[17:46:12] 📹 Seg3 pulled — starting Seg4
+[17:46:47] 👁      mResumedActivity: ActivityRecord{5c0a366 u0 in.southstream.android/.MainActivity t336}
+[17:46:47] 📸 Screenshot #17: firetv_ss_20260413_173736_17_46_47_ss17.png
+[17:46:47] 📊 MEM: 390947 kB
+[17:46:47] 🎬 Janky frames: 2541 (23.51%)
+[17:47:21] 👁      mResumedActivity: ActivityRecord{5c0a366 u0 in.southstream.android/.MainActivity t336}
+[17:47:21] 📸 Screenshot #18: firetv_ss_20260413_173736_17_47_21_ss18.png
+[17:47:21] 📊 MEM: 390167 kB
+[17:47:21] 🎬 Janky frames: 2873 (24.11%)
+[17:47:54] 👁      mResumedActivity: ActivityRecord{5c0a366 u0 in.southstream.android/.MainActivity t336}
+[17:47:54] 📸 Screenshot #19: firetv_ss_20260413_173736_17_47_54_ss19.png
+[17:47:54] 📊 MEM: 349001 kB
+[17:47:54] 🎬 Janky frames: 2877 (24.13%)
+[17:48:26] 👁      mResumedActivity: ActivityRecord{5c0a366 u0 in.southstream.android/.MainActivity t336}
+[17:48:26] 📸 Screenshot #20: firetv_ss_20260413_173736_17_48_26_ss20.png
+[17:48:26] 📊 MEM: 383041 kB
+[17:48:26] 🎬 Janky frames: 2886 (24.14%)
+[17:48:59] 👁      mResumedActivity: ActivityRecord{5c0a366 u0 in.southstream.android/.MainActivity t336}
+[17:48:59] 📸 Screenshot #21: firetv_ss_20260413_173736_17_48_59_ss21.png
+[17:48:59] 📊 MEM: 399963 kB
+[17:48:59] 🎬 Janky frames: 2896 (24.16%)
+[17:48:59] 📹 Seg4 pulled — starting Seg5
+[17:49:34] 👁      mResumedActivity: ActivityRecord{5c0a366 u0 in.southstream.android/.MainActivity t336}
+[17:49:34] 📸 Screenshot #22: firetv_ss_20260413_173736_17_49_34_ss22.png
+[17:49:34] 📊 MEM: 375724 kB
+[17:49:34] 🎬 Janky frames: 2908 (23.78%)
+[17:50:07] 👁      mResumedActivity: ActivityRecord{5c0a366 u0 in.southstream.android/.MainActivity t336}
+[17:50:07] 📸 Screenshot #23: firetv_ss_20260413_173736_17_50_07_ss23.png
+[17:50:07] 📊 MEM: 401542 kB
+[17:50:07] 🎬 Janky frames: 2910 (23.70%)
+[17:50:39] 👁      mResumedActivity: ActivityRecord{5c0a366 u0 in.southstream.android/.MainActivity t336}
+[17:50:39] 📸 Screenshot #24: firetv_ss_20260413_173736_17_50_39_ss24.png
+[17:50:39] 📊 MEM: 426691 kB
+[17:50:39] 🎬 Janky frames: 2992 (23.60%)
+[17:51:14] 👁      mResumedActivity: ActivityRecord{5c0a366 u0 in.southstream.android/.MainActivity t336}
+[17:51:14] 📸 Screenshot #25: firetv_ss_20260413_173736_17_51_14_ss25.png
+[17:51:14] 📊 MEM: 344126 kB
+[17:51:14] 🎬 Janky frames: 3045 (22.36%)
+[17:51:46] 👁      mResumedActivity: ActivityRecord{e7b591 u0 com.amazon.tv.settings.v2/.tv.applications.ApplicationsActivity t3}
+[17:51:46] 📸 Screenshot #26: firetv_ss_20260413_173736_17_51_46_ss26.png
+[17:51:46] 📊 MEM:  kB
+[17:51:46] 🎬 
+[17:51:46] 📹 Seg5 pulled — starting Seg6
+[17:52:24] 👁      mResumedActivity: ActivityRecord{e7b591 u0 com.amazon.tv.settings.v2/.tv.applications.ApplicationsActivity t3}
+[17:52:24] 📸 Screenshot #27: firetv_ss_20260413_173736_17_52_24_ss27.png
+[17:52:24] 📊 MEM:  kB
+[17:52:24] 🎬 
+[17:52:56] 👁      mResumedActivity: ActivityRecord{e7b591 u0 com.amazon.tv.settings.v2/.tv.applications.ApplicationsActivity t3}
+[17:52:56] 📸 Screenshot #28: firetv_ss_20260413_173736_17_52_56_ss28.png
+[17:52:56] 📊 MEM:  kB
+[17:52:56] 🎬 
+[17:53:29] 👁      mResumedActivity: ActivityRecord{e7b591 u0 com.amazon.tv.settings.v2/.tv.applications.ApplicationsActivity t3}
+[17:53:29] 📸 Screenshot #29: firetv_ss_20260413_173736_17_53_29_ss29.png
+[17:53:29] 📊 MEM:  kB
+[17:53:29] 🎬 
+[17:54:01] 👁      mResumedActivity: ActivityRecord{e7b591 u0 com.amazon.tv.settings.v2/.tv.applications.ApplicationsActivity t3}
+[17:54:01] 📸 Screenshot #30: firetv_ss_20260413_173736_17_54_01_ss30.png
+[17:54:01] 📊 MEM:  kB
+[17:54:01] 🎬 
+[17:54:33] 👁      mResumedActivity: ActivityRecord{144e6b6 u0 in.southstream.android/.MainActivity t337}
+[17:54:33] 📸 Screenshot #31: firetv_ss_20260413_173736_17_54_33_ss31.png
+[17:54:33] 📊 MEM: 120007 kB
+[17:54:33] 🎬 Janky frames: 3 (100.00%)
+[17:55:05] 👁      mResumedActivity: ActivityRecord{144e6b6 u0 in.southstream.android/.MainActivity t337}
+[17:55:05] 📸 Screenshot #32: firetv_ss_20260413_173736_17_55_05_ss32.png
+[17:55:05] 📊 MEM: 268194 kB
+[17:55:05] 🎬 Janky frames: 145 (18.71%)
+[17:55:05] 📹 Seg6 pulled — starting Seg7
+[17:55:41] 👁      mResumedActivity: ActivityRecord{144e6b6 u0 in.southstream.android/.MainActivity t337}
+[17:55:41] 📸 Screenshot #33: firetv_ss_20260413_173736_17_55_41_ss33.png
+[17:55:41] 📊 MEM: 361019 kB
+[17:55:41] 🎬 Janky frames: 402 (21.22%)
+[17:56:15] 👁      mResumedActivity: ActivityRecord{144e6b6 u0 in.southstream.android/.MainActivity t337}
+[17:56:15] 📸 Screenshot #34: firetv_ss_20260413_173736_17_56_15_ss34.png
+[17:56:15] 📊 MEM: 394550 kB
+[17:56:15] 🎬 Janky frames: 446 (22.38%)
+[17:56:47] 👁      mResumedActivity: ActivityRecord{144e6b6 u0 in.southstream.android/.MainActivity t337}
+[17:56:47] 📸 Screenshot #35: firetv_ss_20260413_173736_17_56_47_ss35.png
+[17:56:47] 📊 MEM: 393318 kB
+[17:56:47] 🎬 Janky frames: 474 (19.11%)
+[17:57:21] 👁      mResumedActivity: ActivityRecord{144e6b6 u0 in.southstream.android/.MainActivity t337}
+[17:57:21] 📸 Screenshot #36: firetv_ss_20260413_173736_17_57_21_ss36.png
+[17:57:21] 📊 MEM: 395208 kB
+[17:57:21] 🎬 Janky frames: 495 (18.14%)
+[17:57:54] 👁      mResumedActivity: ActivityRecord{144e6b6 u0 in.southstream.android/.MainActivity t337}
+[17:57:54] 📸 Screenshot #37: firetv_ss_20260413_173736_17_57_54_ss37.png
+[17:57:54] 📊 MEM: 363328 kB
+[17:57:54] 🎬 Janky frames: 528 (16.85%)
+[17:57:54] 📹 Seg7 pulled — starting Seg8
+[17:58:32] 👁      mResumedActivity: ActivityRecord{144e6b6 u0 in.southstream.android/.MainActivity t337}
+[17:58:32] 📸 Screenshot #38: firetv_ss_20260413_173736_17_58_32_ss38.png
+[17:58:32] 📊 MEM: 403011 kB
+[17:58:32] 🎬 Janky frames: 658 (16.91%)
+[17:59:05] 👁      mResumedActivity: ActivityRecord{144e6b6 u0 in.southstream.android/.MainActivity t337}
+[17:59:05] 📸 Screenshot #39: firetv_ss_20260413_173736_17_59_05_ss39.png
+[17:59:05] 📊 MEM: 395819 kB
+[17:59:05] 🎬 Janky frames: 696 (16.45%)
+[17:59:40] 👁      mResumedActivity: ActivityRecord{144e6b6 u0 in.southstream.android/.MainActivity t337}
+[17:59:40] 📸 Screenshot #40: firetv_ss_20260413_173736_17_59_40_ss40.png
+[17:59:40] 📊 MEM: 383911 kB
+[17:59:40] 🎬 Janky frames: 780 (15.84%)
+[18:00:11] 👁      mResumedActivity: ActivityRecord{144e6b6 u0 in.southstream.android/.MainActivity t337}
+[18:00:11] 📸 Screenshot #41: firetv_ss_20260413_173736_18_00_11_ss41.png
+[18:00:11] 📊 MEM: 403308 kB
+[18:00:11] 🎬 Janky frames: 792 (16.00%)
+[18:00:44] 👁      mResumedActivity: ActivityRecord{144e6b6 u0 in.southstream.android/.MainActivity t337}
+[18:00:44] 📸 Screenshot #42: firetv_ss_20260413_173736_18_00_44_ss42.png
+[18:00:44] 📊 MEM: 410411 kB
+[18:00:44] 🎬 Janky frames: 820 (16.38%)
+[18:00:44] 📹 Seg8 pulled — starting Seg9
+[18:01:20] 👁      mResumedActivity: ActivityRecord{144e6b6 u0 in.southstream.android/.MainActivity t337}
+[18:01:20] 📸 Screenshot #43: firetv_ss_20260413_173736_18_01_20_ss43.png
+[18:01:20] 📊 MEM: 385254 kB
+[18:01:20] 🎬 Janky frames: 866 (15.49%)
+[18:01:54] 👁      mResumedActivity: ActivityRecord{144e6b6 u0 in.southstream.android/.MainActivity t337}
+[18:01:54] 📸 Screenshot #44: firetv_ss_20260413_173736_18_01_54_ss44.png
+[18:01:54] 📊 MEM: 365629 kB
+[18:01:54] 🎬 Janky frames: 1045 (16.77%)
+[18:02:31] 👁      mResumedActivity: ActivityRecord{144e6b6 u0 in.southstream.android/.MainActivity t337}
+[18:02:31] 📸 Screenshot #45: firetv_ss_20260413_173736_18_02_31_ss45.png
+[18:02:31] 📊 MEM: 376760 kB
+[18:02:31] 🎬 Janky frames: 1119 (17.02%)
+[18:03:05] 👁      mResumedActivity: ActivityRecord{144e6b6 u0 in.southstream.android/.MainActivity t337}
+[18:03:05] 📸 Screenshot #46: firetv_ss_20260413_173736_18_03_05_ss46.png
+[18:03:05] 📊 MEM: 321463 kB
+[18:03:05] 🎬 Janky frames: 1322 (17.98%)
+[18:03:41] 👁      mResumedActivity: ActivityRecord{144e6b6 u0 in.southstream.android/.MainActivity t337}
+[18:03:41] 📸 Screenshot #47: firetv_ss_20260413_173736_18_03_41_ss47.png
+[18:03:41] 📊 MEM: 329314 kB
+[18:03:41] 🎬 Janky frames: 1343 (17.47%)
+[18:03:41] 📹 Seg9 pulled — starting Seg10
+[18:04:19] 👁      mResumedActivity: ActivityRecord{144e6b6 u0 in.southstream.android/.MainActivity t337}
+[18:04:19] 📸 Screenshot #48: firetv_ss_20260413_173736_18_04_19_ss48.png
+[18:04:19] 📊 MEM: 345169 kB
+[18:04:19] 🎬 Janky frames: 1400 (17.58%)
+[18:04:51] 👁      mResumedActivity: ActivityRecord{144e6b6 u0 in.southstream.android/.MainActivity t337}
+[18:04:51] 📸 Screenshot #49: firetv_ss_20260413_173736_18_04_51_ss49.png
+[18:04:51] 📊 MEM: 349867 kB
+[18:04:51] 🎬 Janky frames: 1519 (17.08%)
+[18:05:25] 👁      mResumedActivity: ActivityRecord{144e6b6 u0 in.southstream.android/.MainActivity t337}
+[18:05:25] 📸 Screenshot #50: firetv_ss_20260413_173736_18_05_25_ss50.png
+[18:05:25] 📊 MEM: 335668 kB
+[18:05:25] 🎬 Janky frames: 1520 (16.78%)

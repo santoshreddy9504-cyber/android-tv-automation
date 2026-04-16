@@ -1,0 +1,26 @@
+=====================================================
+FULL MONITOR — SouthStream
+Started : Fri Apr 10 16:35:14 IST 2026
+=====================================================
+[INFO] Screen recording started → /sdcard/southstream_rec_20260410_163514_seg1.mp4 (PID: 41138)
+[16:35:48] 👁      mResumedActivity: ActivityRecord{6f181f9 u0 in.southstream.android/.MainActivity t644}
+[16:35:54] 👁      mResumedActivity: ActivityRecord{6f181f9 u0 in.southstream.android/.MainActivity t644}
+[16:36:00] 👁      mResumedActivity: ActivityRecord{6f181f9 u0 in.southstream.android/.MainActivity t644}
+[16:36:06] 👁      mResumedActivity: ActivityRecord{6f181f9 u0 in.southstream.android/.MainActivity t644}
+[16:36:12] 👁      mResumedActivity: ActivityRecord{fb2a08f u0 com.webnexs.rod_tv/.MainActivity t643}
+[16:36:12] ⚠️  App left foreground!     mResumedActivity: ActivityRecord{fb2a08f u0 com.webnexs.rod_tv/.MainActivity t643}
+[16:36:18] 👁      mResumedActivity: ActivityRecord{fb2a08f u0 com.webnexs.rod_tv/.MainActivity t643}
+[16:36:18] ⚠️  App left foreground!     mResumedActivity: ActivityRecord{fb2a08f u0 com.webnexs.rod_tv/.MainActivity t643}
+[16:36:18] 📸 Screenshot #1: /Users/iostestrevidd/android tv automation/output/screenshots/southstream_163618_ss1.png
+[16:36:18] 📊 MEM: VmRSS:	  230252 kB
+[16:36:18] 🎬 Frame drop: 15.5% (52/334)
+[16:36:30] 👁      mResumedActivity: ActivityRecord{fb2a08f u0 com.webnexs.rod_tv/.MainActivity t643}
+[16:36:30] ⚠️  App left foreground!     mResumedActivity: ActivityRecord{fb2a08f u0 com.webnexs.rod_tv/.MainActivity t643}
+[16:36:37] 👁      mResumedActivity: ActivityRecord{fb2a08f u0 com.webnexs.rod_tv/.MainActivity t643}
+[16:36:37] ⚠️  App left foreground!     mResumedActivity: ActivityRecord{fb2a08f u0 com.webnexs.rod_tv/.MainActivity t643}
+[16:36:43] 👁      mResumedActivity: ActivityRecord{fb2a08f u0 com.webnexs.rod_tv/.MainActivity t643}
+[16:36:43] ⚠️  App left foreground!     mResumedActivity: ActivityRecord{fb2a08f u0 com.webnexs.rod_tv/.MainActivity t643}
+[16:36:49] 👁      mResumedActivity: ActivityRecord{fb2a08f u0 com.webnexs.rod_tv/.MainActivity t643}
+[16:36:49] ⚠️  App left foreground!     mResumedActivity: ActivityRecord{fb2a08f u0 com.webnexs.rod_tv/.MainActivity t643}
+[16:36:57] 👁      mResumedActivity: ActivityRecord{fb2a08f u0 com.webnexs.rod_tv/.MainActivity t643}
+[16:36:57] ⚠️  App left foreground!     mResumedActivity: ActivityRecord{fb2a08f u0 com.webnexs.rod_tv/.MainActivity t643}

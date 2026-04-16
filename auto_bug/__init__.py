@@ -1,0 +1,1 @@
+# Auto Bug Report Generator

@@ -1,0 +1,108 @@
+=====================================================
+SILENT MONITOR — SouthStream Manual Test
+Started : Mon Apr 13 16:38:23 IST 2026
+Device  : 192.168.2.29:5555
+=====================================================
+[16:38:23] 👁      mResumedActivity: ActivityRecord{1d77a90 u0 com.android.tv.settings/.MainSettings t767}
+[16:38:23] 📸 Screenshot #1: ss_manual_20260413_163823_16_38_23_ss1.png
+[16:38:23] 📊 MEM: 147994 kB
+[16:38:23] 🎬 Janky frames: 375 (5.55%)
+Janky frames (legacy): 1769 (26.20%)
+[16:38:58] 👁      mResumedActivity: ActivityRecord{ddebbe0 u0 in.southstream.android/.MainActivity t765}
+[16:38:58] 📸 Screenshot #2: ss_manual_20260413_163823_16_38_58_ss2.png
+[16:38:58] 📊 MEM: 150399 kB
+[16:38:58] 🎬 Janky frames: 402 (5.73%)
+Janky frames (legacy): 1895 (27.00%)
+[16:39:33] 👁      mResumedActivity: ActivityRecord{ddebbe0 u0 in.southstream.android/.MainActivity t765}
+[16:39:33] 📸 Screenshot #3: ss_manual_20260413_163823_16_39_33_ss3.png
+[16:39:33] 📊 MEM: 169790 kB
+[16:39:33] 🎬 Janky frames: 418 (4.94%)
+Janky frames (legacy): 2580 (30.49%)
+[16:40:08] 👁      mResumedActivity: ActivityRecord{a2b1d50 u0 in.southstream.android/.MainActivity t770}
+[16:40:08] 📸 Screenshot #4: ss_manual_20260413_163823_16_40_08_ss4.png
+[16:40:08] 📊 MEM: 109384 kB
+[16:40:08] 🎬 Janky frames: 3 (100.00%)
+Janky frames (legacy): 3 (100.00%)
+[16:40:42] 👁      mResumedActivity: ActivityRecord{a2b1d50 u0 in.southstream.android/.MainActivity t770}
+[16:40:42] 📸 Screenshot #5: ss_manual_20260413_163823_16_40_42_ss5.png
+[16:40:42] 📊 MEM: 208011 kB
+[16:40:42] 🎬 Janky frames: 73 (16.48%)
+Janky frames (legacy): 349 (78.78%)
+[16:41:18] 👁      mResumedActivity: ActivityRecord{a2b1d50 u0 in.southstream.android/.MainActivity t770}
+[16:41:18] 📸 Screenshot #6: ss_manual_20260413_163823_16_41_18_ss6.png
+[16:41:18] 📊 MEM: 254824 kB
+[16:41:18] 🎬 Janky frames: 244 (14.40%)
+Janky frames (legacy): 1437 (84.83%)
+[16:41:18] 📹 Seg1 pulled — starting Seg2
+[16:42:01] 👁      mResumedActivity: ActivityRecord{a2b1d50 u0 in.southstream.android/.MainActivity t770}
+[16:42:01] 📸 Screenshot #7: ss_manual_20260413_163823_16_42_01_ss7.png
+[16:42:01] 📊 MEM: 240242 kB
+[16:42:01] 🎬 Janky frames: 313 (11.75%)
+Janky frames (legacy): 1748 (65.64%)
+[16:42:35] 👁      mResumedActivity: ActivityRecord{c906414 u0 in.southstream.android/.MainActivity t771}
+[16:42:35] 📸 Screenshot #8: ss_manual_20260413_163823_16_42_35_ss8.png
+[16:42:35] 📊 MEM: 107135 kB
+[16:42:35] 🎬 Janky frames: 3 (100.00%)
+Janky frames (legacy): 3 (100.00%)
+[16:43:08] 👁      mResumedActivity: ActivityRecord{c906414 u0 in.southstream.android/.MainActivity t771}
+[16:43:08] 📸 Screenshot #9: ss_manual_20260413_163823_16_43_08_ss9.png
+[16:43:08] 📊 MEM: 190768 kB
+[16:43:08] 🎬 Janky frames: 43 (14.01%)
+Janky frames (legacy): 182 (59.28%)
+[16:43:44] 👁      mResumedActivity: ActivityRecord{c906414 u0 in.southstream.android/.MainActivity t771}
+[16:43:44] 📸 Screenshot #10: ss_manual_20260413_163823_16_43_44_ss10.png
+[16:43:44] 📊 MEM: 192469 kB
+[16:43:44] 🎬 Janky frames: 79 (9.72%)
+Janky frames (legacy): 371 (45.63%)
+[16:44:21] 👁      mResumedActivity: ActivityRecord{c906414 u0 in.southstream.android/.MainActivity t771}
+[16:44:21] 📸 Screenshot #11: ss_manual_20260413_163823_16_44_21_ss11.png
+[16:44:21] 📊 MEM: 231192 kB
+[16:44:21] 🎬 Janky frames: 140 (9.20%)
+Janky frames (legacy): 740 (48.65%)
+[16:44:21] 📹 Seg2 pulled — starting Seg3
+[16:44:59] 👁      mResumedActivity: ActivityRecord{c906414 u0 in.southstream.android/.MainActivity t771}
+[16:44:59] 📸 Screenshot #12: ss_manual_20260413_163823_16_44_59_ss12.png
+[16:44:59] 📊 MEM: 226096 kB
+[16:44:59] 🎬 Janky frames: 173 (8.61%)
+Janky frames (legacy): 978 (48.68%)
+[16:45:35] 👁      mResumedActivity: ActivityRecord{c906414 u0 in.southstream.android/.MainActivity t771}
+[16:45:35] 📸 Screenshot #13: ss_manual_20260413_163823_16_45_35_ss13.png
+[16:45:35] 📊 MEM: 206779 kB
+[16:45:35] 🎬 Janky frames: 175 (7.65%)
+Janky frames (legacy): 992 (43.38%)
+[16:46:09] 👁      mResumedActivity: ActivityRecord{c906414 u0 in.southstream.android/.MainActivity t771}
+[16:46:09] 📸 Screenshot #14: ss_manual_20260413_163823_16_46_09_ss14.png
+[16:46:09] 📊 MEM: 217670 kB
+[16:46:09] 🎬 Janky frames: 215 (5.88%)
+Janky frames (legacy): 1252 (34.24%)
+[16:46:48] 👁      mResumedActivity: ActivityRecord{c906414 u0 in.southstream.android/.MainActivity t771}
+[16:46:48] 📸 Screenshot #15: ss_manual_20260413_163823_16_46_48_ss15.png
+[16:46:48] 📊 MEM: 235204 kB
+[16:46:48] 🎬 Janky frames: 350 (7.49%)
+Janky frames (legacy): 1745 (37.37%)
+[16:47:27] 👁      mResumedActivity: ActivityRecord{c906414 u0 in.southstream.android/.MainActivity t771}
+[16:47:27] 📸 Screenshot #16: ss_manual_20260413_163823_16_47_27_ss16.png
+[16:47:27] 📊 MEM: 241694 kB
+[16:47:27] 🎬 Janky frames: 624 (10.65%)
+Janky frames (legacy): 2577 (43.98%)
+[16:47:27] 📹 Seg3 pulled — starting Seg4
+[16:48:13] 👁  
+[16:48:13] 📸 Screenshot #17: ss_manual_20260413_163823_16_48_13_ss17.png
+[16:48:13] 📊 MEM:  kB
+[16:48:13] 🎬 
+[16:48:43] 👁  
+[16:48:43] 📸 Screenshot #18: ss_manual_20260413_163823_16_48_43_ss18.png
+[16:48:43] 📊 MEM:  kB
+[16:48:43] 🎬 
+[16:49:13] 👁  
+[16:49:13] 📸 Screenshot #19: ss_manual_20260413_163823_16_49_13_ss19.png
+[16:49:13] 📊 MEM:  kB
+[16:49:13] 🎬 
+[16:49:43] 👁  
+[16:49:43] 📸 Screenshot #20: ss_manual_20260413_163823_16_49_43_ss20.png
+[16:49:43] 📊 MEM:  kB
+[16:49:43] 🎬 
+[16:50:13] 👁  
+[16:50:13] 📸 Screenshot #21: ss_manual_20260413_163823_16_50_13_ss21.png
+[16:50:13] 📊 MEM:  kB
+[16:50:13] 🎬 

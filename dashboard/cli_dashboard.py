@@ -3,6 +3,8 @@ CLI Dashboard — live terminal UI using the 'rich' library.
 Displays real-time device metrics, recent issues, and session stats.
 """
 
+from __future__ import annotations
+
 import time
 import logging
 import threading
